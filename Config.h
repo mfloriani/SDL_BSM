@@ -1,0 +1,15 @@
+#pragma once
+
+#define SCREEN_WIDTH		800
+#define SCREEN_HEIGHT		600
+#define TILE_WIDTH			16
+#define TILE_HEIGHT			16
+#define TILES_MAP_X			50		//SCREEN_WIDTH	/ TILE_WIDTH
+#define TILES_MAP_Y			37		//SCREEN_HEIGHT / SCREEN_HEIGHT
+#define TILES_MAP_COUNT		1850	//TILES_MAP_X	* TILES_MAP_Y
+#define TILES_SPRITESHEET	10
+#define TILE_NULL			0
+#define TILE_WALL			1
+#define TILE_ENEMY			2
+#define TILE_PLAYER1		3
+#define TILE_PLAYER2		4
