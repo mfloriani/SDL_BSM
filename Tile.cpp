@@ -1,7 +1,7 @@
 #include "Tile.h"
 
 
-Tile::Tile(SDL_Rect *box, int type, int id, Texture *texture, SDL_Rect *clip) : m_box(box), m_type(type), m_id(id), m_texture(texture), m_clip(clip)
+Tile::Tile(SDL_Rect *box, int type, int id, Texture *texture, SDL_Rect *clip, bool isCollidable) : m_box(box), m_type(type), m_id(id), m_texture(texture), m_clip(clip), m_isCollidable(isCollidable)
 {
 }
 
@@ -9,6 +9,7 @@ Tile::Tile(SDL_Rect *box, int type, int id, Texture *texture, SDL_Rect *clip) : 
 Tile::~Tile()
 {
 	m_texture->Free();
+	delete m_box;
 
 	m_texture = NULL;
 	m_box = NULL;
@@ -33,4 +34,9 @@ int Tile::GetType()
 int Tile::GetId()
 {
 	return m_id;
+}
+
+bool Tile::isCollidable()
+{
+	return m_isCollidable;
 }

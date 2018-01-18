@@ -8,6 +8,8 @@
 #include "Timer.h"
 #include "Config.h"
 #include "Tile.h"
+#include "GameObject.h"
+#include "Player.h"
 
 SDL_Rect camera = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
 SDL_Window* gWindow = NULL;
@@ -16,9 +18,11 @@ TTF_Font *gFont = NULL;
 Timer fpsTimer;
 
 Tile *mapTiles[TILES_MAP_COUNT];
-Texture *spriteSheet = new Texture();
+Texture *spriteSheetTex = new Texture();
 SDL_Rect clips[TILES_SPRITESHEET];
 
+Texture *player1Tex = new Texture();
+Player *player1 = NULL;
 
 int framesCount = 0;
 
@@ -68,25 +72,21 @@ int main(int argc, char* args[])
 				switch (evt.key.keysym.sym)
 				{
 				case SDLK_RETURN:
-					/*if (musicIsPlaying)
-					{
-						musicIsPlaying = false;
-						Mix_PauseMusic();
-					}	
-					else
 					
-						musicIsPlaying = true;
-						Mix_PlayMusic(musicTest, -1);
-					}*/
-					break; 
-				
+					break;
 				case SDLK_SPACE:
-					//Mix_PlayChannel(-1, sfxTest, 0);
+					
 					break;
 				}
 			}
+			player1->HandleInput(&evt);
 		}
 		
+		player1->Update(secs, mapTiles);
+
+		
+		
+
 		SDL_SetRenderDrawColor(gRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
 		SDL_RenderClear(gRenderer);
 
@@ -94,6 +94,8 @@ int main(int argc, char* args[])
 		{
 			mapTiles[t]->Draw();
 		}
+
+		player1->Draw(secs);
 
 		SDL_RenderPresent(gRenderer);
 		++framesCount;
@@ -149,29 +151,9 @@ bool Load()
 		return false;
 	}
 
-	//if (!spriteSheet->LoadFromFile(gRenderer, "spriteSheet.png")) return false;
-	if (!spriteSheet->LoadFromFile(gRenderer, "spriteSheet16x16.png")) return false;
+	if (!spriteSheetTex->LoadFromFile(gRenderer, "spriteSheet16x16.png")) return false;
 
-
-	/*Texture testTex;
-	if (!testTex.LoadFromFile(gRenderer, "test.png")) return false;
-
-	Mix_Music* musicTest = nullptr;
-	musicTest = Mix_LoadMUS("testMusic.mp3");
-	if (musicTest == NULL)
-	{
-		printf("Failed to load mp3! SDL_mixer Error: %s\n", Mix_GetError());
-		return false;
-	}
-	bool musicIsPlaying = false;
-
-	Mix_Chunk* sfxTest;
-	sfxTest = Mix_LoadWAV("testSfx.wav");
-	if (sfxTest == NULL)
-	{
-		printf("Failed to load wav! SDL_mixer Error: %s\n", Mix_GetError());
-		return false;
-	}*/
+	if (!player1Tex->LoadFromFile(gRenderer, "player1.png")) return false;
 
 
 	LoadClips();
@@ -191,16 +173,13 @@ void Shutdown()
 	TTF_CloseFont(gFont);
 	gFont = NULL;
 
-	spriteSheet->Free();
-	delete spriteSheet;
+	spriteSheetTex->Free();
+	delete spriteSheetTex;
+	spriteSheetTex = NULL;
 
-	/*
-	Mix_FreeMusic(musicTest);
-	musicTest = NULL;
-
-	Mix_FreeChunk(sfxTest);
-	sfxTest = NULL;
-	*/
+	player1Tex->Free();
+	delete player1Tex;
+	player1Tex = NULL;
 
 	SDL_DestroyRenderer(gRenderer);
 	gRenderer = NULL;
@@ -230,8 +209,7 @@ void LoadClips()
 	clips[TILE_WALL] = { TILE_WIDTH, 0, TILE_WIDTH, TILE_HEIGHT };
 	clips[TILE_ENEMY] = { TILE_WIDTH*2, 0, TILE_WIDTH, TILE_HEIGHT };
 	clips[TILE_PLAYER1] = { TILE_WIDTH*3, 0, TILE_WIDTH, TILE_HEIGHT };
-	clips[TILE_PLAYER2] = { TILE_WIDTH * 4, 0, TILE_WIDTH, TILE_HEIGHT };
-
+	clips[TILE_PLAYER2] = { TILE_WIDTH*4, 0, TILE_WIDTH, TILE_HEIGHT };
 }
 
 bool LoadMap(std::string filename)
@@ -263,8 +241,20 @@ bool LoadMap(std::string filename)
 
 		if (tileType == TILE_NULL || tileType == TILE_WALL || tileType == TILE_ENEMY || tileType == TILE_PLAYER1 || tileType == TILE_PLAYER2)
 		{
+			if (tileType == TILE_PLAYER1)
+			{
+				tileType = TILE_NULL;
+				player1 = new Player(Vector2D(x,y), player1Tex);
+			}
+
+			bool isCollidable = false;
+			if (tileType == TILE_WALL)
+			{
+				isCollidable = true;
+			}
+
 			SDL_Rect *box = new SDL_Rect { x, y, TILE_WIDTH, TILE_HEIGHT };
-			tile = new Tile(box, tileType, id++, spriteSheet, &clips[tileType]);
+			tile = new Tile(box, tileType, id++, spriteSheetTex, &clips[tileType], isCollidable);
 			mapTiles[t] = tile;
 		}
 		else
