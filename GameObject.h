@@ -4,6 +4,7 @@
 #include <string>
 #include "Config.h"
 #include "Tile.h"
+#include <vector>
 
 using namespace math;
 using namespace std;
@@ -20,6 +21,8 @@ protected:
 	float m_mass;
 	float m_radianAngle;
 	float m_degreeAngle;
+	float m_velocity;
+	bool  m_active;
 	//float m_maxVelocity;
 	//string m_tag;
 	//int m_id;
@@ -31,11 +34,12 @@ protected:
 
 
 public:
-	GameObject(Vector2D pos, Texture *sprite);
+	GameObject(Vector2D pos, float vel, Texture *sprite);
 	virtual ~GameObject();
-	virtual void Update(float secs, Tile *tileMap[]);
+	virtual void Update(float secs, Tile *tileMap[], vector<GameObject*> *gameObjects);
 	virtual void Draw(float secs);
 	SDL_Rect* GetCollider();
+	bool IsActive();
 
 	//Vector2D GetPosition();
 	//Vector2D GetDirection();

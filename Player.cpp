@@ -1,17 +1,20 @@
 #include "Player.h"
 
 
-Player::Player(Vector2D pos, Texture *sprite) : GameObject(pos, sprite), m_velocity(10000)
+Player::Player(Vector2D pos, Texture *sprite, Texture *bulletSprite) : GameObject(pos, 10000, sprite), m_bulletSprite(bulletSprite)
 {
 }
 
 
 Player::~Player()
 {
+	
 }
 
 void Player::HandleInput(SDL_Event *ev)
 {
+	m_fireButtonPressed = false;
+
 	if (ev->type == SDL_KEYDOWN)
 	{
 		switch (ev->key.keysym.sym)
@@ -71,14 +74,14 @@ void Player::HandleInput(SDL_Event *ev)
 	}
 	else if (ev->type == SDL_MOUSEBUTTONDOWN && ev->button.button == SDL_BUTTON_LEFT)
 	{
-		int x, y;
+		/*int x, y;
 		SDL_GetMouseState(&x, &y);
 		
 		Vector2D mouseVec = Vector2D(x, y);
 		Vector2D path = mouseVec - m_position;
-		path.normalize();
+		path.normalize();*/
 
-
+		m_fireButtonPressed = true;
 	}
 	else if (ev->type == SDL_MOUSEBUTTONDOWN && ev->button.button == SDL_BUTTON_RIGHT)
 	{
@@ -115,4 +118,15 @@ Vector2D Player::CalcForces()
 		forces += Vector2D(0, m_velocity);
 	}
 	return forces;
+}
+
+void Player::Update(float secs, Tile *tileMap[], vector<GameObject*> *gameObjects)
+{
+	GameObject::Update(secs, tileMap, gameObjects);
+
+	if (m_fireButtonPressed)
+	{
+		Bullet* bullet = new Bullet(m_position, m_direction, m_bulletSprite);
+		gameObjects->push_back(bullet);
+	}
 }

@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <fstream>
+#include <vector>
 #include <SDL.h>
 #include <SDL_image.h>
 #include <SDL_mixer.h>
@@ -10,6 +11,7 @@
 #include "Tile.h"
 #include "GameObject.h"
 #include "Player.h"
+#include "Enemy.h"
 
 SDL_Rect camera = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
 SDL_Window* gWindow = NULL;
@@ -23,6 +25,12 @@ SDL_Rect clips[TILES_SPRITESHEET];
 
 Texture *player1Tex = new Texture();
 Player *player1 = NULL;
+Texture *bulletTex = new Texture();
+
+Texture *enemyTex = new Texture();
+
+vector<GameObject*> gameObjects;
+vector<GameObject*>::iterator goIter;
 
 int framesCount = 0;
 
@@ -82,10 +90,26 @@ int main(int argc, char* args[])
 			player1->HandleInput(&evt);
 		}
 		
-		player1->Update(secs, mapTiles);
+		player1->Update(secs, mapTiles, &gameObjects);
 
-		
-		
+		if (gameObjects.size() > 0)
+		{
+			for (goIter = gameObjects.begin(); goIter != gameObjects.end(); ++goIter)
+			{
+				if ((*goIter) != NULL && (*goIter)->IsActive())
+				{
+					if (dynamic_cast<Bullet*>(*goIter) != nullptr)
+					{
+						(dynamic_cast<Bullet*>(*goIter))->Update(secs, mapTiles, &gameObjects);
+					}
+				}
+				/*else
+				{
+					delete (*goIter);
+					(*goIter) = NULL;
+				}*/
+			}
+		}
 
 		SDL_SetRenderDrawColor(gRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
 		SDL_RenderClear(gRenderer);
@@ -96,6 +120,17 @@ int main(int argc, char* args[])
 		}
 
 		player1->Draw(secs);
+
+		if (gameObjects.size() > 0)
+		{
+			for (goIter = gameObjects.begin(); goIter != gameObjects.end(); ++goIter)
+			{
+				if ((*goIter) != NULL && (*goIter)->IsActive())
+				{
+					(*goIter)->Draw(secs);
+				}
+			}
+		}
 
 		SDL_RenderPresent(gRenderer);
 		++framesCount;
@@ -155,6 +190,9 @@ bool Load()
 
 	if (!player1Tex->LoadFromFile(gRenderer, "player1.png")) return false;
 
+	if (!bulletTex->LoadFromFile(gRenderer, "bullet1.png")) return false;
+
+	if (!enemyTex->LoadFromFile(gRenderer, "enemy.png")) return false;
 
 	LoadClips();
 	
@@ -180,6 +218,25 @@ void Shutdown()
 	player1Tex->Free();
 	delete player1Tex;
 	player1Tex = NULL;
+
+	bulletTex->Free();
+	delete bulletTex;
+	bulletTex = NULL;
+
+	enemyTex->Free();
+	delete enemyTex;
+	enemyTex = NULL;
+
+	if (gameObjects.size() > 0)
+	{
+		for (goIter = gameObjects.begin(); goIter != gameObjects.end(); ++goIter)
+		{
+			if ((*goIter) != NULL)
+			{
+				delete (*goIter);
+			}
+		}
+	}
 
 	SDL_DestroyRenderer(gRenderer);
 	gRenderer = NULL;
@@ -244,7 +301,13 @@ bool LoadMap(std::string filename)
 			if (tileType == TILE_PLAYER1)
 			{
 				tileType = TILE_NULL;
-				player1 = new Player(Vector2D(x,y), player1Tex);
+				player1 = new Player(Vector2D(x,y), player1Tex, bulletTex);
+			}
+			else if (tileType == TILE_ENEMY)
+			{
+				tileType = TILE_NULL;
+				Enemy* en = new Enemy(Vector2D(x, y), enemyTex);
+				gameObjects.push_back(en);
 			}
 
 			bool isCollidable = false;
@@ -252,6 +315,8 @@ bool LoadMap(std::string filename)
 			{
 				isCollidable = true;
 			}
+
+			
 
 			SDL_Rect *box = new SDL_Rect { x, y, TILE_WIDTH, TILE_HEIGHT };
 			tile = new Tile(box, tileType, id++, spriteSheetTex, &clips[tileType], isCollidable);
