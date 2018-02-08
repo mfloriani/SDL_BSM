@@ -1,7 +1,7 @@
 #include "Player.h"
 
 
-Player::Player(Vector2D pos, Texture *sprite, Texture *bulletSprite) : GameObject(pos, 10000, sprite), m_bulletSprite(bulletSprite)
+Player::Player(Vector2D pos, Texture *sprite, Texture *bulletSprite) : GameObject(pos, sprite), m_bulletSprite(bulletSprite)
 {
 }
 
@@ -100,22 +100,22 @@ Vector2D Player::CalcForces()
 	Vector2D forces;
 	if (m_rightButtonPressed)
 	{
-		forces += Vector2D(m_velocity, 0);
+		forces += Vector2D(1000, 0);
 	}
 
 	if (m_leftButtonPressed)
 	{
-		forces += Vector2D(-m_velocity, 0);
+		forces += Vector2D(-1000, 0);
 	}
 
 	if (m_upButtonPressed)
 	{
-		forces += Vector2D(0, -m_velocity);
+		forces += Vector2D(0, -1000);
 	}
 
 	if (m_downButtonPressed)
 	{
-		forces += Vector2D(0, m_velocity);
+		forces += Vector2D(0, 1000);
 	}
 	return forces;
 }
@@ -126,7 +126,12 @@ void Player::Update(float secs, Tile *tileMap[], vector<GameObject*> *gameObject
 
 	if (m_fireButtonPressed)
 	{
-		Bullet* bullet = new Bullet(m_position, m_direction, m_bulletSprite);
+		Bullet* bullet = new Bullet(m_position, m_direction, m_bulletSprite, this);
 		gameObjects->push_back(bullet);
 	}
+}
+
+bool Player::HandleMessage(const Message& msg)
+{
+	return false;
 }

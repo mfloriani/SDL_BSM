@@ -1,7 +1,7 @@
 #include "Bullet.h"
 
 
-Bullet::Bullet(Vector2D pos, Vector2D dir, Texture* sprite) : GameObject(pos, 1000.0f, sprite)
+Bullet::Bullet(Vector2D pos, Vector2D dir, Texture* sprite, GameObject* owner) : GameObject(pos, sprite), m_owner(owner)
 {
 	m_direction = dir;
 }
@@ -15,7 +15,7 @@ void Bullet::Update(float secs, Tile *tileMap[], vector<GameObject*> *gameObject
 {
 	if (!m_active) return;	//dont process this gameobject
 
-	m_position += m_direction * m_velocity * secs;
+	m_position += m_direction * 1000.0f * secs;
 	UpdateCollider();
 
 	vector<GameObject*>::iterator goIter;
@@ -27,7 +27,10 @@ void Bullet::Update(float secs, Tile *tileMap[], vector<GameObject*> *gameObject
 			{
 				if (SDL_HasIntersection(&m_collider, dynamic_cast<Enemy*>(*goIter)->GetCollider()))
 				{
-					dynamic_cast<Enemy*>(*goIter)->TakeDamage(100);
+					//dynamic_cast<Enemy*>(*goIter)->TakeDamage(100);
+
+					Msger->SendMsg(m_owner->GetId(), dynamic_cast<Enemy*>(*goIter)->GetId(), 0.0f, Msg_BulletHit, NULL);
+
 				}
 			}
 		}
@@ -55,4 +58,9 @@ void Bullet::Update(float secs, Tile *tileMap[], vector<GameObject*> *gameObject
 			}
 		}
 	}
+}
+
+bool Bullet::HandleMessage(const Message& msg)
+{
+	return false;
 }

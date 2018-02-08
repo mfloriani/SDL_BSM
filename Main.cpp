@@ -12,6 +12,9 @@
 #include "GameObject.h"
 #include "Player.h"
 #include "Enemy.h"
+#include "GameObjectManager.h"
+#include "Messenger.h"
+#include "WindowsClock.h"
 
 SDL_Rect camera = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
 SDL_Window* gWindow = NULL;
@@ -102,14 +105,15 @@ int main(int argc, char* args[])
 					{
 						(dynamic_cast<Bullet*>(*goIter))->Update(secs, mapTiles, &gameObjects);
 					}
+					else if (dynamic_cast<Enemy*>(*goIter) != nullptr)
+					{
+						(dynamic_cast<Enemy*>(*goIter))->Update(secs, mapTiles, &gameObjects);
+					}
 				}
-				/*else
-				{
-					delete (*goIter);
-					(*goIter) = NULL;
-				}*/
 			}
 		}
+
+		Msger->SendDelayedMsg(); //send all the queued messages ready to be sent
 
 		SDL_SetRenderDrawColor(gRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
 		SDL_RenderClear(gRenderer);
@@ -302,12 +306,14 @@ bool LoadMap(std::string filename)
 			{
 				tileType = TILE_NULL;
 				player1 = new Player(Vector2D(x,y), player1Tex, bulletTex);
+				GoManager->AddGameObject(player1);
 			}
 			else if (tileType == TILE_ENEMY)
 			{
 				tileType = TILE_NULL;
 				Enemy* en = new Enemy(Vector2D(x, y), enemyTex);
 				gameObjects.push_back(en);
+				GoManager->AddGameObject(en);
 			}
 
 			bool isCollidable = false;

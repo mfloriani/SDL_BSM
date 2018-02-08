@@ -1,8 +1,11 @@
 #include "GameObject.h"
 
+int GameObject::m_nextId = 0;
 
-GameObject::GameObject(Vector2D pos, float vel, Texture *sprite) : m_position(pos), m_sprite(sprite), m_mass(1), m_radianAngle(0.0f), m_degreeAngle(0.0f), m_velocity(vel), m_active(true)
+GameObject::GameObject(Vector2D pos, Texture *sprite) : m_position(pos), m_sprite(sprite), m_mass(1), 
+m_radianAngle(0.0f), m_degreeAngle(0.0f), m_velocity(Vector2D(0,0)), m_active(true), m_maxForce(2.0), m_maxVelocity(150.0)
 {
+	SetId();
 	UpdateDirection();
 	UpdateCollider();
 }
@@ -10,6 +13,11 @@ GameObject::GameObject(Vector2D pos, float vel, Texture *sprite) : m_position(po
 
 GameObject::~GameObject()
 {
+}
+
+void GameObject::SetId()
+{
+	m_id = ++m_nextId;
 }
 
 Vector2D GameObject::CalcForces()
@@ -21,10 +29,18 @@ void GameObject::Update(float secs, Tile *tileMap[], vector<GameObject*> *gameOb
 {
 	if (!m_active) return;	//dont process this gameobject
 
-	Vector2D forces = CalcForces();
-	Vector2D accelSecs = (forces / m_mass) * secs;
 	
-	Vector2D nextPosition = m_position + accelSecs * secs;	//projection of the future position
+	Vector2D forces = CalcForces();
+	Vector2D accelSecs = (forces / m_mass);
+	
+	m_velocity += accelSecs * secs;
+	if (m_velocity.size() > m_maxVelocity)
+	{
+		m_velocity.normalize();
+		m_velocity *= m_maxVelocity;
+	}
+
+	Vector2D nextPosition = m_position + m_velocity * secs;	//projection of the future position
 	
 	SDL_Rect nextPosCollider;
 	nextPosCollider.x = nextPosition.x;
@@ -55,7 +71,7 @@ void GameObject::Update(float secs, Tile *tileMap[], vector<GameObject*> *gameOb
 
 	if (!collided)
 	{
-		m_position += accelSecs * secs;		//move the real position only when there is no collision detected
+		m_position += m_velocity * secs;		//move the real position only when there is no collision detected
 		UpdateCollider();
 	}	
 }
@@ -85,12 +101,3 @@ void GameObject::UpdateCollider()
 	}
 }
 
-SDL_Rect* GameObject::GetCollider()
-{
-	return &m_collider;
-}
-
-bool GameObject::IsActive()
-{
-	return m_active;
-}

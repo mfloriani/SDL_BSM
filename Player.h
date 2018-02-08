@@ -23,6 +23,7 @@ public:
 	virtual ~Player();
 	void HandleInput(SDL_Event *e);
 	virtual void Update(float secs, Tile *tileMap[], vector<GameObject*> *gameObjects);
+	virtual bool HandleMessage(const Message& msg);
 	
 };
 
