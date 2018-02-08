@@ -70,29 +70,47 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AffineTransform.cpp" />
+    <ClCompile Include="Bullet.cpp" />
+    <ClCompile Include="Enemy.cpp" />
+    <ClCompile Include="EnemyStates.cpp" />
     <ClCompile Include="GameObject.cpp" />
+    <ClCompile Include="GameObjectManager.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="MathUtil.cpp" />
     <ClCompile Include="Matrix3.cpp" />
+    <ClCompile Include="Messenger.cpp" />
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="SteeringBehaviors.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="Tile.cpp" />
     <ClCompile Include="Timer.cpp" />
     <ClCompile Include="Vector2D.cpp" />
     <ClCompile Include="Vector3D.cpp" />
+    <ClCompile Include="WindowsClock.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AffineTransform.h" />
+    <ClInclude Include="Bullet.h" />
     <ClInclude Include="Config.h" />
+    <ClInclude Include="Enemy.h" />
+    <ClInclude Include="EnemyStates.h" />
+    <ClInclude Include="GameMessages.h" />
     <ClInclude Include="GameObject.h" />
+    <ClInclude Include="GameObjectManager.h" />
     <ClInclude Include="MathUtil.h" />
     <ClInclude Include="Matrix3.h" />
+    <ClInclude Include="Message.h" />
+    <ClInclude Include="Messenger.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="State.h" />
+    <ClInclude Include="StateMachine.h" />
+    <ClInclude Include="SteeringBehaviors.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="Tile.h" />
     <ClInclude Include="Timer.h" />
     <ClInclude Include="Vector2D.h" />
     <ClInclude Include="Vector3D.h" />
+    <ClInclude Include="WindowsClock.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="map_01.map" />
