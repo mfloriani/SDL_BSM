@@ -13,3 +13,5 @@
 #define TILE_ENEMY			2
 #define TILE_PLAYER1		3
 #define TILE_PLAYER2		4
+#define SPRITE_WIDTH		16
+#define SPRITE_HEIGHT		16

@@ -2,11 +2,10 @@
 #include <set>
 #include "Message.h"
 #include "GameObject.h"
-#include "GameObjectManager.h"
-#include "WindowsClock.h"
-#include <iostream>
 
 #define Msger Messenger::GetInstance()
+
+class GameObject;
 
 class Messenger
 {

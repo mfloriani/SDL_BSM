@@ -1,17 +1,28 @@
 #pragma once
 #include "GameObject.h"
-#include "Enemy.h"
+#include "Texture.h"
+#include "Messenger.h"
+#include "World.h"
+
+
 class Bullet : public GameObject
 {
 private:
-	GameObject* m_owner;
-public:
-	Bullet(Vector2D pos, Vector2D dir, Texture* sprite, GameObject* owner);
-	virtual ~Bullet();
-	virtual void Update(float secs, Tile *tileMap[], vector<GameObject*> *gameObjects);
-	virtual bool HandleMessage(const Message& msg);
+	GameObject* owner_;
+	Texture*	sprite_;
+	World*		world_;
 
-	GameObject* GetOwner(){ return m_owner; };
+public:
+	Bullet(	Texture*		sprite, 
+			GameObject*		owner,
+			World*			world);
+
+	virtual			~Bullet();
+	void			Update(float secs);
+	void			Draw();
+	virtual bool	HandleMessage(const Message& msg);
+	GameObject*		GetOwner()const{ return owner_; }
+	void			HandleCollision();
 
 
 };

@@ -4,6 +4,8 @@
 
 #define GoManager GameObjectManager::GetInstance()
 
+class GameObject;
+
 class GameObjectManager
 {
 private:

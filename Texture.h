@@ -2,7 +2,6 @@
 #define __TEXTURE_H__
 
 #include <string>
-#include <SDL_image.h>
 #include <SDL_ttf.h>
 
 class Texture

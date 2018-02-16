@@ -1,4 +1,6 @@
 #include "Messenger.h"
+#include "WindowsClock.h"
+#include "GameObjectManager.h"
 
 
 Messenger* Messenger::GetInstance()
@@ -31,7 +33,7 @@ void Messenger::SendMsg(int sender, int receiver, double delay, int msg, void* e
 		double curTime = WinClock->GetCurTime();
 		message.SendTime = curTime + delay;
 		m_delayedMessages.insert(message);
-		cout << "Sender: " << message.Sender << " Receiver: " << message.Receiver << endl;
+		std::cout << "Sender: " << message.Sender << " Receiver: " << message.Receiver << std::endl;
 	}
 }
 

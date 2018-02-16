@@ -1,4 +1,5 @@
 #include "Texture.h"
+#include <SDL_image.h>
 
 
 Texture::Texture()

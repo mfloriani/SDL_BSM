@@ -1,10 +1,16 @@
 #include "Player.h"
 
 
-Player::Player(Vector2D pos, Texture *sprite, Texture *bulletSprite) : GameObject(pos, sprite), m_bulletSprite(bulletSprite)
+Player::Player(	World*			world, 
+				math::Vector2D	pos, 
+				Texture*		sprite, 
+				Texture*		bulletSprite):	GameObject(pos), 
+												m_bulletSprite(bulletSprite), 
+												sprite_(sprite),
+												aim_(math::Vector2D(0,0)),
+												world_(world)
 {
 }
-
 
 Player::~Player()
 {
@@ -55,32 +61,12 @@ void Player::HandleInput(SDL_Event *ev)
 	{
 		int x, y;
 		SDL_GetMouseState(&x, &y);
+		aim_.x = x;
+		aim_.y = y;
 		//std::cout << "Mouse Position: " << x << " " << y << endl;
-
-		Vector2D mouseVec = Vector2D(x, y);
-		Vector2D path = mouseVec - m_position;
-		path.normalize();
-
-		Vector2D dir = m_direction;
-		//float dot = dir.dot(path);
-		float angle = dir.relativeAngleBetween(path);
-		m_direction = path;
-
-		if (angle != 0) angle *= -1;
-
-		m_radianAngle += angle;
-		m_degreeAngle += toDegrees(angle);
-
 	}
 	else if (ev->type == SDL_MOUSEBUTTONDOWN && ev->button.button == SDL_BUTTON_LEFT)
 	{
-		/*int x, y;
-		SDL_GetMouseState(&x, &y);
-		
-		Vector2D mouseVec = Vector2D(x, y);
-		Vector2D path = mouseVec - m_position;
-		path.normalize();*/
-
 		m_fireButtonPressed = true;
 	}
 	else if (ev->type == SDL_MOUSEBUTTONDOWN && ev->button.button == SDL_BUTTON_RIGHT)
@@ -91,47 +77,118 @@ void Player::HandleInput(SDL_Event *ev)
 	{
 		
 	}
-	
+	else if (ev->type == SDL_MOUSEBUTTONUP && ev->button.button == SDL_BUTTON_LEFT)
+	{
+		m_fireButtonPressed = false;
+	}
 
 }
 
-Vector2D Player::CalcForces()
+math::Vector2D Player::CalcForces()
 {
-	Vector2D forces;
+	int speed = 600;
+	math::Vector2D forces;
 	if (m_rightButtonPressed)
-	{
-		forces += Vector2D(1000, 0);
-	}
+		forces += math::Vector2D(speed, 0);
 
 	if (m_leftButtonPressed)
-	{
-		forces += Vector2D(-1000, 0);
-	}
+		forces += math::Vector2D(-speed, 0);
 
 	if (m_upButtonPressed)
-	{
-		forces += Vector2D(0, -1000);
-	}
+		forces += math::Vector2D(0, -speed);
 
 	if (m_downButtonPressed)
-	{
-		forces += Vector2D(0, 1000);
-	}
+		forces += math::Vector2D(0, speed);
+
+	if (forces.isZero()) velocity_ = math::Vector2D(0, 0); //stop the movement when player is not pressing movement button
+
 	return forces;
 }
 
-void Player::Update(float secs, Tile *tileMap[], vector<GameObject*> *gameObjects)
+void Player::Update(float secs)
 {
-	GameObject::Update(secs, tileMap, gameObjects);
+	Rotate();
 
-	if (m_fireButtonPressed)
+	if (m_fireButtonPressed && lastShot_ >= rateOfFire_)
 	{
-		Bullet* bullet = new Bullet(m_position, m_direction, m_bulletSprite, this);
-		gameObjects->push_back(bullet);
+		m_fireButtonPressed = false;
+		lastShot_ = 0;
+		world_->AddNewBullet(this);
 	}
+	lastShot_ += secs;
+
+	math::Vector2D forces = CalcForces();
+	math::Vector2D accelSecs = (forces / mass_);
+
+	velocity_ += accelSecs * secs;
+	if (velocity_.size() > maxVelocity_)
+	{
+		velocity_.normalize();
+		velocity_ *= maxVelocity_;
+	}
+
+	math::Vector2D nextPosition = position_ + velocity_ * secs;	//projection of the future position
+	
+	SDL_Rect nextPosCollider;
+	nextPosCollider.x = nextPosition.x;
+	nextPosCollider.y = nextPosition.y;
+	nextPosCollider.w = sprite_->GetWidth();
+	nextPosCollider.h = sprite_->GetHeight();
+
+	bool collided = false;
+
+	if (nextPosCollider.x < 0 || (nextPosCollider.x + nextPosCollider.w) > SCREEN_WIDTH) collided = true;					//check limits of the screen on X
+
+	if (!collided && (nextPosCollider.y < 0 || (nextPosCollider.y + nextPosCollider.h) > SCREEN_HEIGHT)) collided = true;	//check limits of the screen on Y
+
+	if (!collided)
+	{
+		for (int i = 0; i < TILES_MAP_COUNT; i++)
+		{
+			if (world_->GetTiles()[i]->isCollidable())
+			{
+				if (SDL_HasIntersection(&nextPosCollider, world_->GetTiles()[i]->GetBox()))	//check collision on the tiles of the tilemap
+				{
+					collided = true;
+					break;
+				}
+			}
+		}
+	}
+
+	if (!collided)
+	{
+		position_  += velocity_ * secs;		//move the real position only when there is no collision detected
+		UpdateBoxCollider();
+	}
+	
 }
 
 bool Player::HandleMessage(const Message& msg)
 {
 	return false;
+}
+
+void Player::Draw()
+{
+	if (!IsActive()) return;	//dont process this gameobject
+
+	sprite_->Render(position_.x, position_.y, NULL, degreeAngle_, NULL, SDL_FLIP_NONE);
+}
+
+void Player::Rotate()
+{
+	if (aim_ == direction_) return;
+
+	math::Vector2D path = aim_ - position_;
+	path.normalize();
+
+	math::Vector2D dir = direction_;
+	float angle = dir.relativeAngleBetween(path);
+	direction_ = path;
+
+	if (angle != 0) angle *= -1;
+
+	radianAngle_ += angle;
+	degreeAngle_ += math::toDegrees(angle);
 }
