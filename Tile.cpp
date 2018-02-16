@@ -10,10 +10,6 @@ Tile::~Tile()
 {
 	m_texture->Free();
 	delete m_box;
-
-	m_texture = NULL;
-	m_box = NULL;
-	m_clip = NULL;
 }
 
 void Tile::Draw()

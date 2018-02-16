@@ -1,5 +1,4 @@
 #pragma once
-#include <iostream>
 #include <math.h>
 
 struct Message
@@ -10,10 +9,20 @@ struct Message
 	double	SendTime;
 	void*	ExtraInfo;
 
-	Message() : Sender(-1), Receiver(-1), Msg(-1), SendTime(-1){}
+	Message() : Sender(-1), 
+				Receiver(-1), 
+				Msg(-1), 
+				SendTime(-1){}
 
-	Message(int sender, int receiver, int msg, double delay, void* info = NULL) 
-		:Sender(sender), Receiver(receiver), Msg(msg), SendTime(delay), ExtraInfo(info){}
+	Message(int sender, 
+			int receiver, 
+			int msg, 
+			double delay, 
+			void* info = NULL): Sender(sender), 
+								Receiver(receiver), 
+								Msg(msg), 
+								SendTime(delay), 
+								ExtraInfo(info){}
 };
 
 const double SmallestDelay = 0.25;	//consider 1/4 of a sec as the same msg

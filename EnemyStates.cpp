@@ -51,7 +51,7 @@ EnemyIdle* EnemyIdle::GetInstance()
 void EnemyIdle::Enter(Enemy* e)
 {
 	std::cout << "Enter idle " << e->GetId() << std::endl;
-	Msger->SendMsg(e->GetId(), e->GetId(), 10.0f, MessageType::Msg_StartPatrolling, NULL);
+	Msger->SendMsg(e->GetId(), e->GetId(), 1.0f, MessageType::Msg_StartPatrolling, NULL);
 }
 
 void EnemyIdle::Execute(Enemy* e)
@@ -72,6 +72,11 @@ bool EnemyIdle::OnMessage(Enemy* enemy, const Message& msg)
 	case Msg_StartPatrolling:
 		enemy->GetFSM()->ChangeState(EnemyPatrol::GetInstance());
 		break;
+
+	case Msg_Chase:
+		enemy->GetFSM()->ChangeState(EnemyChase::GetInstance());
+		break;
+
 	default:
 		break;
 	}
@@ -90,6 +95,7 @@ EnemyPatrol* EnemyPatrol::GetInstance()
 void EnemyPatrol::Enter(Enemy* e)
 {
 	std::cout << "Enter Patrol " << e->GetId() << std::endl;
+	Msger->SendMsg(e->GetId(), e->GetId(), 1.0f, MessageType::Msg_Chase, NULL);
 }
 
 void EnemyPatrol::Execute(Enemy* e)
@@ -105,6 +111,15 @@ void EnemyPatrol::Exit(Enemy* e)
 
 bool EnemyPatrol::OnMessage(Enemy* enemy, const Message& msg)
 {
+	switch (msg.Msg)
+	{
+	case Msg_Chase:
+		enemy->GetFSM()->ChangeState(EnemyChase::GetInstance());
+		break;
+
+	default:
+		break;
+	}
 	return false;
 }
 
@@ -119,11 +134,14 @@ EnemyChase* EnemyChase::GetInstance()
 void EnemyChase::Enter(Enemy* e)
 {
 	std::cout << "Enter Chase " << e->GetId() << std::endl;
+	e->SetPlayerAsTarget();
+	//e->GetSteering()->SwitchOnOff(SteeringBehaviors::seek, true);
+	e->GetSteering()->SwitchOnOff(SteeringBehaviors::arrive, true);
 }
 
 void EnemyChase::Execute(Enemy* e)
 {
-	std::cout << "Execute Chase " << e->GetId() << std::endl;
+	//std::cout << "Execute Chase " << e->GetId() << std::endl;
 }
 
 void EnemyChase::Exit(Enemy* e)
@@ -210,7 +228,8 @@ EnemyDead* EnemyDead::GetInstance()
 void EnemyDead::Enter(Enemy* e)
 {
 	std::cout << "Enter dead " << e->GetId() << std::endl;
-	e->Kill();
+	//e->Kill();
+	e->SetActive(false);
 }
 
 void EnemyDead::Execute(Enemy* e)

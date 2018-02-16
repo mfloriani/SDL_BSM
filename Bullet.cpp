@@ -1,9 +1,14 @@
 #include "Bullet.h"
+#include "GameMessages.h"
 
-
-Bullet::Bullet(Vector2D pos, Vector2D dir, Texture* sprite, GameObject* owner) : GameObject(pos, sprite), m_owner(owner)
+Bullet::Bullet(Texture*			sprite, 
+			   GameObject*		owner,
+			   World*			world) : GameObject(owner->GetPosition()),
+											owner_(owner),
+											sprite_(sprite),
+											world_(world)
 {
-	m_direction = dir;
+	direction_ = owner->GetDirection();
 }
 
 
@@ -11,54 +16,63 @@ Bullet::~Bullet()
 {
 }
 
-void Bullet::Update(float secs, Tile *tileMap[], vector<GameObject*> *gameObjects)
+void Bullet::Update(float secs)
 {
-	if (!m_active) return;	//dont process this gameobject
+	if (!IsActive()) return;	//dont process this gameobject
 
-	m_position += m_direction * 1000.0f * secs;
-	UpdateCollider();
+	position_ += direction_ * 1000.0f * secs;
+	UpdateBoxCollider();
 
-	vector<GameObject*>::iterator goIter;
-	for (goIter = gameObjects->begin(); goIter != gameObjects->end(); ++goIter)
+	HandleCollision();
+}
+
+void Bullet::HandleCollision()
+{
+	std::vector<GameObject*>::iterator go;
+	for (go = world_->GetCollidableObjects()->begin(); go != world_->GetCollidableObjects()->end(); ++go)
 	{
-		if ((*goIter) != NULL && (*goIter)->IsActive())
+		if ((*go) != NULL && (*go)->IsActive() /*&& (*go)->GetId() != GetId()*/)
 		{
-			if (dynamic_cast<Enemy*>(*goIter) != nullptr)
+			if (SDL_HasIntersection(&boxCollider_, &(*go)->GetBoxCollider()))
 			{
-				if (SDL_HasIntersection(&m_collider, dynamic_cast<Enemy*>(*goIter)->GetCollider()))
-				{
-					//dynamic_cast<Enemy*>(*goIter)->TakeDamage(100);
-
-					Msger->SendMsg(m_owner->GetId(), dynamic_cast<Enemy*>(*goIter)->GetId(), 0.0f, Msg_BulletHit, NULL);
-
-				}
+				//std::cout << owner_->GetId() << " | " << (*go)->GetId() << std::endl;
+				Msger->SendMsg(owner_->GetId(), (*go)->GetId(), 0.0f, Msg_BulletHit, NULL);
 			}
 		}
 	}
 
-	if (m_collider.x < 0 || (m_collider.x + m_collider.w) > SCREEN_WIDTH)	//check limits of the screen on X
+	if (boxCollider_.x < 0 || (boxCollider_.x + boxCollider_.w) > SCREEN_WIDTH)		//check limits of the screen on X
 	{
-		m_active = false;
+		SetActive(false);
 		return;
 	}
-	if (m_collider.y < 0 || (m_collider.y + m_collider.h) > SCREEN_HEIGHT)	//check limits of the screen on Y
+	if (boxCollider_.y < 0 || (boxCollider_.y + boxCollider_.h) > SCREEN_HEIGHT)	//check limits of the screen on Y
 	{
-		m_active = false;	
+		SetActive(false);
 		return;
 	}
 
 	for (int i = 0; i < TILES_MAP_COUNT; i++)
 	{
-		if (tileMap[i]->isCollidable())
+		if (world_->GetTiles()[i]->isCollidable())
 		{
-			if (SDL_HasIntersection(&m_collider, tileMap[i]->GetBox()))		//check collision on the tiles of the tilemap
+			if (SDL_HasIntersection(&boxCollider_, world_->GetTiles()[i]->GetBox()))	//check collision on the tiles of the tilemap
 			{
-				m_active = false;
+				SetActive(false);
 				break;
 			}
 		}
 	}
+	
 }
+
+void Bullet::Draw()
+{
+	if (!IsActive()) return;	//dont process this gameobject
+
+	sprite_->Render(position_.x, position_.y, NULL, degreeAngle_, NULL, SDL_FLIP_NONE);
+}
+
 
 bool Bullet::HandleMessage(const Message& msg)
 {

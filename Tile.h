@@ -5,13 +5,12 @@
 class Tile
 {
 private:
-	int m_type;
-	int m_id;
-	bool m_isCollidable;
-	
-	SDL_Rect *m_box;
-	Texture *m_texture;
-	SDL_Rect *m_clip;
+	int			m_type;
+	int			m_id;
+	bool		m_isCollidable;
+	SDL_Rect*	m_box;
+	Texture*	m_texture;
+	SDL_Rect*	m_clip;
 	
 public:
 	Tile(SDL_Rect *box, int type, int id, Texture *texture, SDL_Rect *clip, bool isCollidable);

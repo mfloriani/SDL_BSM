@@ -1,33 +1,35 @@
 #include "SteeringBehaviors.h"
 
-
 SteeringBehaviors::SteeringBehaviors(GameObject* agent) : m_agent(agent)
 {
-	for (int i = 0; i < BEHAVIORS_COUNT; i++)
-		m_behaviorsStatus[i] = false;
+	for (int i = 0; i < BEHAVIORS_COUNT; i++) m_behaviorsStatus[i] = false;
 }
-
 
 SteeringBehaviors::~SteeringBehaviors()
 {
 }
 
-Vector2D SteeringBehaviors::Calculate()
+math::Vector2D SteeringBehaviors::Calculate()
 {
-	m_steeringForce = Vector2D(0, 0);
+	m_steeringForce = math::Vector2D(0, 0);
 
-	Vector2D force;
+	math::Vector2D force;
 
-	if (IsSeekOn())
+	if (IsOn(seek))
 	{
 		force = Seek(m_target);
-		if (!AccumulateForce(m_steeringForce, force)) 
-			return m_steeringForce;
+		if (!AccumulateForce(m_steeringForce, force)) return m_steeringForce;
 	}
-
+	if (IsOn(arrive))
+	{
+		force = Arrive(m_target, Deceleration::slow);
+		if (!AccumulateForce(m_steeringForce, force)) return m_steeringForce;
+	}
+	
+	return m_steeringForce;
 }
 
-bool SteeringBehaviors::AccumulateForce(Vector2D &curTotalForce, Vector2D forceToAdd)
+bool SteeringBehaviors::AccumulateForce(math::Vector2D &curTotalForce, math::Vector2D forceToAdd)
 {
 	double curTotallength = curTotalForce.size();
 	double remainingLength = m_agent->GetMaxForce() - curTotallength;
@@ -44,8 +46,41 @@ bool SteeringBehaviors::AccumulateForce(Vector2D &curTotalForce, Vector2D forceT
 	return true;
 }
 
-Vector2D SteeringBehaviors::Seek(Vector2D targetPos)
+math::Vector2D SteeringBehaviors::Seek(math::Vector2D targetPos)
 {
-	Vector2D desiredVel = (targetPos - m_agent->GetPosition()).normalize() * m_agent->GetMaxVelocity();
+	//std::cout << targetPos << std::endl;
+	math::Vector2D desiredVel = ((targetPos - m_agent->GetPosition()).normalize()) * m_agent->GetMaxVelocity();
 	return (desiredVel - m_agent->GetVelocity());
 }
+
+math::Vector2D SteeringBehaviors::Arrive(math::Vector2D targetPos, Deceleration deceleration)
+{
+	math::Vector2D toTarget = targetPos - m_agent->GetPosition();
+
+	//calculate the distance to the target
+	double dist = toTarget.size();
+
+	//std::cout << dist << std::endl;
+
+	if (dist > 0)
+	{
+		//because Deceleration is enumerated as an int, this value is required to provide fine tweaking of the deceleration..
+		const double DecelerationTweaker = 1;
+
+		//calculate the speed required to reach the target given the desired deceleration
+		double speed = dist / ((double)deceleration * DecelerationTweaker);
+
+		//make sure the velocity does not exceed the max
+		speed = (speed < m_agent->GetMaxVelocity()) ? speed : m_agent->GetMaxVelocity();
+
+		//from here proceed just like Seek except we don't need to normalize 
+		//the ToTarget vector because we have already gone to the trouble
+		//of calculating its length: dist. 
+		math::Vector2D desiredVelocity = toTarget * speed / dist;
+
+		return (desiredVelocity - m_agent->GetVelocity());
+	}
+
+	return math::Vector2D(0, 0);
+}
+

@@ -1,29 +1,44 @@
 #pragma once
-#include "GameObject.h"
 #include <SDL.h>
-#include <iostream>
-#include <vector>
-#include "Bullet.h"
+#include "GameObject.h"
+#include "Texture.h"
+#include "World.h"
+
+class World;
+class GameObject;
 
 class Player : public GameObject
 {
 private:
-	virtual Vector2D CalcForces();
-
+	Texture*		m_bulletSprite;
+	Texture*		sprite_;
+	math::Vector2D	aim_;
+	World*			world_;
+	
 	bool m_leftButtonPressed;
 	bool m_rightButtonPressed;
 	bool m_upButtonPressed;
 	bool m_downButtonPressed;
 	bool m_fireButtonPressed;
 
-	Texture* m_bulletSprite;
+	float rateOfFire_ = 0.5f;
+	float lastShot_ = 0.0f;
+
+	virtual math::Vector2D CalcForces();
+	void Player::Rotate();
 
 public:
-	Player(Vector2D pos, Texture *sprite, Texture *bulletSprite);
-	virtual ~Player();
-	void HandleInput(SDL_Event *e);
-	virtual void Update(float secs, Tile *tileMap[], vector<GameObject*> *gameObjects);
-	virtual bool HandleMessage(const Message& msg);
+	Player(World*			world, 
+		   math::Vector2D	pos, 
+		   Texture*			sprite, 
+		   Texture*			bulletSprite);
+
+	virtual	~Player();
+	void	HandleInput(SDL_Event *e);
+	void	Update(float secs);
+	void	Draw();
+	bool	HandleMessage(const Message& msg);
+	World*	GetWorld()const{ return world_; }
 	
 };
 
