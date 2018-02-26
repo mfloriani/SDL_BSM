@@ -79,10 +79,10 @@
     <ClCompile Include="MathUtil.cpp" />
     <ClCompile Include="Matrix3.cpp" />
     <ClCompile Include="Messenger.cpp" />
+    <ClCompile Include="Pathfinder.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="SDLGame.cpp" />
     <ClCompile Include="SteeringBehaviors.cpp" />
-    <ClCompile Include="Test.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="Tile.cpp" />
     <ClCompile Include="Timer.cpp" />
@@ -93,6 +93,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AffineTransform.h" />
+    <ClInclude Include="AStar.h" />
+    <ClInclude Include="AStarHeuristics.h" />
     <ClInclude Include="Bullet.h" />
     <ClInclude Include="Config.h" />
     <ClInclude Include="Enemy.h" />
@@ -100,16 +102,22 @@
     <ClInclude Include="GameMessages.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="GameObjectManager.h" />
+    <ClInclude Include="Graph.h" />
+    <ClInclude Include="GraphEdgeTypes.h" />
+    <ClInclude Include="GraphFunctions.h" />
+    <ClInclude Include="GraphNodeTypes.h" />
     <ClInclude Include="MathUtil.h" />
     <ClInclude Include="Matrix3.h" />
     <ClInclude Include="Message.h" />
     <ClInclude Include="Messenger.h" />
+    <ClInclude Include="NodeTypeEnum.h" />
+    <ClInclude Include="Pathfinder.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="PriorityQueue.h" />
     <ClInclude Include="SDLGame.h" />
     <ClInclude Include="State.h" />
     <ClInclude Include="StateMachine.h" />
     <ClInclude Include="SteeringBehaviors.h" />
-    <ClInclude Include="Test.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="Tile.h" />
     <ClInclude Include="Timer.h" />

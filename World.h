@@ -4,6 +4,7 @@
 #include "Player.h"
 #include "Config.h"
 #include "Texture.h"
+#include "Pathfinder.h"
 
 class Player;
 
@@ -19,6 +20,7 @@ private:
 	Texture*					spriteSheet_;
 	SDL_Rect*					clips_[TILES_SPRITESHEET];
 	std::vector<GameObject*>*	collidableObjects_;
+	Pathfinder*					pathfinder_;
 
 public:
 	World();

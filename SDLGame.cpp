@@ -116,8 +116,8 @@ int SDLGame::Run()
 
 		while (SDL_PollEvent(&evt) != 0)
 		{
-			if (evt.type == SDL_QUIT || (evt.type == SDL_KEYDOWN && evt.key.keysym.sym == SDLK_ESCAPE)) 
-				quit = true;
+			if (evt.type == SDL_QUIT || (evt.type == SDL_KEYDOWN && evt.key.keysym.sym == SDLK_ESCAPE)) quit = true;
+
 			world_->HandleInput(&evt);
 		}
 
