@@ -22,33 +22,27 @@
     <Filter Include="Messaging">
       <UniqueIdentifier>{e96c89bd-ce1c-4ff9-b371-ea01f3768c35}</UniqueIdentifier>
     </Filter>
+    <Filter Include="AI\FSM">
+      <UniqueIdentifier>{dda49515-e839-4c59-bbd5-9ded6679d6fe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AI\Pathfinding">
+      <UniqueIdentifier>{10a6ca79-2715-4b96-aafc-33478d8df817}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AI\Steering">
+      <UniqueIdentifier>{48d2604d-40c9-404c-b4f8-d3eadf2ef7c4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObjects">
+      <UniqueIdentifier>{7096a22b-3fe6-45e7-81b7-14da08bcdd22}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="World">
+      <UniqueIdentifier>{449b0e0d-16ae-4140-a7fe-05b85d95acf6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Tile.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Player.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Bullet.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Enemy.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="GameObjectManager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="World.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="SDLGame.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Test.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="AffineTransform.cpp">
@@ -75,44 +69,38 @@
     <ClCompile Include="WindowsClock.cpp">
       <Filter>Misc</Filter>
     </ClCompile>
-    <ClCompile Include="EnemyStates.cpp">
-      <Filter>AI</Filter>
-    </ClCompile>
-    <ClCompile Include="SteeringBehaviors.cpp">
-      <Filter>AI</Filter>
-    </ClCompile>
     <ClCompile Include="Messenger.cpp">
       <Filter>Messaging</Filter>
     </ClCompile>
+    <ClCompile Include="EnemyStates.cpp">
+      <Filter>AI\FSM</Filter>
+    </ClCompile>
+    <ClCompile Include="SteeringBehaviors.cpp">
+      <Filter>AI\Steering</Filter>
+    </ClCompile>
+    <ClCompile Include="Pathfinder.cpp">
+      <Filter>AI\Pathfinding</Filter>
+    </ClCompile>
+    <ClCompile Include="Bullet.cpp">
+      <Filter>GameObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="Enemy.cpp">
+      <Filter>GameObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObjectManager.cpp">
+      <Filter>GameObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>GameObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="World.cpp">
+      <Filter>World</Filter>
+    </ClCompile>
+    <ClCompile Include="Tile.cpp">
+      <Filter>World</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Tile.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Player.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Bullet.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Enemy.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="GameObjectManager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="EnemyStates.h">
-      <Filter>AI</Filter>
-    </ClInclude>
-    <ClInclude Include="SteeringBehaviors.h">
-      <Filter>AI</Filter>
-    </ClInclude>
-    <ClInclude Include="StateMachine.h">
-      <Filter>AI</Filter>
-    </ClInclude>
-    <ClInclude Include="State.h">
-      <Filter>AI</Filter>
-    </ClInclude>
     <ClInclude Include="AffineTransform.h">
       <Filter>Misc</Filter>
     </ClInclude>
@@ -140,16 +128,7 @@
     <ClInclude Include="Texture.h">
       <Filter>Misc</Filter>
     </ClInclude>
-    <ClInclude Include="GameObject.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="World.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="SDLGame.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Test.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="GameMessages.h">
@@ -160,6 +139,66 @@
     </ClInclude>
     <ClInclude Include="Messenger.h">
       <Filter>Messaging</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyStates.h">
+      <Filter>AI\FSM</Filter>
+    </ClInclude>
+    <ClInclude Include="State.h">
+      <Filter>AI\FSM</Filter>
+    </ClInclude>
+    <ClInclude Include="StateMachine.h">
+      <Filter>AI\FSM</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphNodeTypes.h">
+      <Filter>AI\Pathfinding</Filter>
+    </ClInclude>
+    <ClInclude Include="SteeringBehaviors.h">
+      <Filter>AI\Steering</Filter>
+    </ClInclude>
+    <ClInclude Include="NodeTypeEnum.h">
+      <Filter>AI\Pathfinding</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphEdgeTypes.h">
+      <Filter>AI\Pathfinding</Filter>
+    </ClInclude>
+    <ClInclude Include="Graph.h">
+      <Filter>AI\Pathfinding</Filter>
+    </ClInclude>
+    <ClInclude Include="Pathfinder.h">
+      <Filter>AI\Pathfinding</Filter>
+    </ClInclude>
+    <ClInclude Include="Bullet.h">
+      <Filter>GameObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="Enemy.h">
+      <Filter>GameObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject.h">
+      <Filter>GameObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObjectManager.h">
+      <Filter>GameObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>GameObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="World.h">
+      <Filter>World</Filter>
+    </ClInclude>
+    <ClInclude Include="Tile.h">
+      <Filter>World</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphFunctions.h">
+      <Filter>AI\Pathfinding</Filter>
+    </ClInclude>
+    <ClInclude Include="PriorityQueue.h">
+      <Filter>Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="AStarHeuristics.h">
+      <Filter>AI\Pathfinding</Filter>
+    </ClInclude>
+    <ClInclude Include="AStar.h">
+      <Filter>AI\Pathfinding</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

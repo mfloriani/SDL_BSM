@@ -15,6 +15,7 @@ World::World()
 	spriteSheet_ = new Texture();
 	bulletSprite_ = new Texture();
 	player_ = nullptr;
+	pathfinder_ = new Pathfinder();
 }
 
 World::~World()
@@ -50,7 +51,9 @@ World::~World()
 bool World::Initialize()
 {
 	if (!LoadAssets()) return false;
+		
 	if (!LoadScene()) return false;
+	
 	return true;
 }
 
@@ -74,6 +77,8 @@ bool World::LoadScene()
 	int x = 0;
 	int y = 0;
 	int id = 0;
+
+	pathfinder_->CreateGraph();
 
 	std::ifstream map("map_01.map");
 
@@ -100,17 +105,20 @@ bool World::LoadScene()
 			{
 				tileType = TILE_NULL;
 				AddNewPlayer(math::Vector2D(x, y));
+				pathfinder_->ChangeTarget(t);
 			}
 			else if (tileType == TILE_ENEMY)
 			{
 				tileType = TILE_NULL;
 				AddNewEnemy(math::Vector2D(x, y));
+				pathfinder_->ChangeSource(t);
 			}
 
 			bool isCollidable = false;
 			if (tileType == TILE_WALL)
 			{
 				isCollidable = true;
+				pathfinder_->UpdateGraph(t,false);
 			}
 
 			tiles_[t] = new Tile(new SDL_Rect{ x, y, TILE_WIDTH, TILE_HEIGHT }, tileType, id++, spriteSheet_, clips_[tileType], isCollidable);
@@ -162,6 +170,9 @@ void World::HandleInput(SDL_Event* evt)
 		{
 		case SDLK_RETURN:
 			
+			//pathfinder_->ChangeSource(0);
+			//pathfinder_->ChangeTarget(1849);
+			pathfinder_->CreateAStarPath();
 
 			break;
 		case SDLK_SPACE:
@@ -197,6 +208,8 @@ void World::Draw()
 	{
 		tiles_[t]->Draw();
 	}
+
+	pathfinder_->Draw(Game->GetRenderer());
 
 	player_->Draw();
 

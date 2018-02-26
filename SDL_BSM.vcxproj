@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
@@ -13,18 +13,19 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{8C71827F-56A4-4FEF-84E9-B30A01CDFFAC}</ProjectGuid>
     <RootNamespace>SDL_BSM</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v120</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v120</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
@@ -78,10 +79,10 @@
     <ClCompile Include="MathUtil.cpp" />
     <ClCompile Include="Matrix3.cpp" />
     <ClCompile Include="Messenger.cpp" />
+    <ClCompile Include="Pathfinder.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="SDLGame.cpp" />
     <ClCompile Include="SteeringBehaviors.cpp" />
-    <ClCompile Include="Test.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="Tile.cpp" />
     <ClCompile Include="Timer.cpp" />
@@ -92,6 +93,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AffineTransform.h" />
+    <ClInclude Include="AStar.h" />
+    <ClInclude Include="AStarHeuristics.h" />
     <ClInclude Include="Bullet.h" />
     <ClInclude Include="Config.h" />
     <ClInclude Include="Enemy.h" />
@@ -99,16 +102,22 @@
     <ClInclude Include="GameMessages.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="GameObjectManager.h" />
+    <ClInclude Include="Graph.h" />
+    <ClInclude Include="GraphEdgeTypes.h" />
+    <ClInclude Include="GraphFunctions.h" />
+    <ClInclude Include="GraphNodeTypes.h" />
     <ClInclude Include="MathUtil.h" />
     <ClInclude Include="Matrix3.h" />
     <ClInclude Include="Message.h" />
     <ClInclude Include="Messenger.h" />
+    <ClInclude Include="NodeTypeEnum.h" />
+    <ClInclude Include="Pathfinder.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="PriorityQueue.h" />
     <ClInclude Include="SDLGame.h" />
     <ClInclude Include="State.h" />
     <ClInclude Include="StateMachine.h" />
     <ClInclude Include="SteeringBehaviors.h" />
-    <ClInclude Include="Test.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="Tile.h" />
     <ClInclude Include="Timer.h" />

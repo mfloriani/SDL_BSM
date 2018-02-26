@@ -17,7 +17,7 @@ private:
 	Texture*				sprite_;
 	World*					world_;
 	SteeringBehaviors*		steering_;
-
+	
 public:
 	Enemy(World*			world, 
 		  math::Vector2D	pos, 
