@@ -39,7 +39,8 @@ protected:
 										degreeAngle_(0.0f),
 										velocity_(math::Vector2D(0,0)),
 										maxForce_(2.0f),
-										maxVelocity_(150.0f)
+										maxVelocity_(150.0f),
+										direction_(math::Vector2D(1,0))
 	{
 		UpdateBoxCollider();
 	}
@@ -53,7 +54,7 @@ protected:
 	}
 
 public:
-	virtual		 ~GameObject(){};
+	virtual		 ~GameObject(){}
 	virtual void Update(float secs)=0;
 	virtual void Draw()=0;
 	virtual bool HandleMessage(const Message& msg) = 0;

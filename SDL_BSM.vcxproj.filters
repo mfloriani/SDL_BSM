@@ -200,6 +200,18 @@
     <ClInclude Include="AStar.h">
       <Filter>AI\Pathfinding</Filter>
     </ClInclude>
+    <ClInclude Include="Path.h">
+      <Filter>AI\Steering</Filter>
+    </ClInclude>
+    <ClInclude Include="Wall.h">
+      <Filter>World</Filter>
+    </ClInclude>
+    <ClInclude Include="Geometry.h">
+      <Filter>Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="WorldFunctions.h">
+      <Filter>World</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="map_01.map">

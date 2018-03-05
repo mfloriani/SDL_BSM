@@ -108,7 +108,7 @@ math::Vector2D Player::CalcForces()
 void Player::Update(float secs)
 {
 	Rotate();
-
+		
 	if (m_fireButtonPressed && lastShot_ >= rateOfFire_)
 	{
 		m_fireButtonPressed = false;

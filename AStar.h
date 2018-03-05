@@ -34,8 +34,9 @@ public:
 		Search();
 	}
 	
-	std::vector<Edge*>	GetSPT()const { return shortestPathTree_; }
-	std::list<int>		GetPathToTarget()const;
+	std::vector<Edge*>			GetSPT()const { return shortestPathTree_; }
+	std::list<int>				GetPathToTarget()const;
+	std::list<math::Vector2D>	GetWaypointsToTarget()const;
 };
 
 template <class graph_type, class heuristic>
@@ -112,6 +113,23 @@ std::list<int> AStar<graph_type, heuristic>::GetPathToTarget()const
 	{
 		node = shortestPathTree_[node]->GetFrom();
 		path.push_back(node);
+	}
+
+	return path;
+}
+
+template <class graph_type, class heuristic>
+std::list<math::Vector2D> AStar<graph_type, heuristic>::GetWaypointsToTarget()const
+{
+	std::list<math::Vector2D> path;
+
+	int node = target_;
+	path.push_back(graph_.GetNode(node).GetPosition());
+
+	while (node != source_ && shortestPathTree_[node] != 0)
+	{
+		node = shortestPathTree_[node]->GetFrom();
+		path.push_back(graph_.GetNode(node).GetPosition());
 	}
 
 	return path;

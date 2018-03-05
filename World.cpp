@@ -1,12 +1,10 @@
 #include "World.h"
-#include "SDLGame.h"
-#include <fstream>
-#include "GameObjectManager.h"
-#include "Enemy.h"
-#include "Bullet.h"
 
 
-World::World()
+World::World(): cellWidth_(0),
+				cellHeight_(0),
+				numCellsX_(0),
+				numCellsY_(0)
 {
 	objects_ = new std::vector<GameObject*>();
 	collidableObjects_ = new std::vector<GameObject*>();
@@ -15,11 +13,13 @@ World::World()
 	spriteSheet_ = new Texture();
 	bulletSprite_ = new Texture();
 	player_ = nullptr;
-	pathfinder_ = new Pathfinder();
+	navGraph_ = new NavGraph();
+	
 }
 
 World::~World()
 {
+	delete navGraph_;
 	delete player_;
 
 	playerSprite_->Free();
@@ -45,6 +45,15 @@ World::~World()
 	for (int i=0; i < TILES_SPRITESHEET; i++)
 	{
 		delete clips_[i];
+	}
+
+	std::vector<Wall*>::const_iterator itWall;
+	if (walls_.size() > 0)
+	{
+		for (itWall = walls_.begin(); itWall != walls_.end(); ++itWall)
+		{
+			delete (*itWall);
+		}
 	}
 }
 
@@ -72,13 +81,15 @@ bool World::LoadAssets()
 	return true;
 }
 
+
+
 bool World::LoadScene()
 {
 	int x = 0;
 	int y = 0;
 	int id = 0;
 
-	pathfinder_->CreateGraph();
+	CreateNavGraph();
 
 	std::ifstream map("map_01.map");
 
@@ -105,20 +116,20 @@ bool World::LoadScene()
 			{
 				tileType = TILE_NULL;
 				AddNewPlayer(math::Vector2D(x, y));
-				pathfinder_->ChangeTarget(t);
+				
 			}
 			else if (tileType == TILE_ENEMY)
 			{
 				tileType = TILE_NULL;
 				AddNewEnemy(math::Vector2D(x, y));
-				pathfinder_->ChangeSource(t);
+				
 			}
 
 			bool isCollidable = false;
 			if (tileType == TILE_WALL)
 			{
 				isCollidable = true;
-				pathfinder_->UpdateGraph(t,false);
+				UpdateNavGraph(t,false);
 			}
 
 			tiles_[t] = new Tile(new SDL_Rect{ x, y, TILE_WIDTH, TILE_HEIGHT }, tileType, id++, spriteSheet_, clips_[tileType], isCollidable);
@@ -139,6 +150,21 @@ bool World::LoadScene()
 	}
 
 	map.close();
+	
+	//setting the walls manually for now
+	walls_.push_back(new Wall(math::Vector2D(40, 40), math::Vector2D(760, 40)));	//top
+	walls_.push_back(new Wall(math::Vector2D(40, 40), math::Vector2D(40, 248)));	//left
+	walls_.push_back(new Wall(math::Vector2D(120, 40), math::Vector2D(120, 136)));	//col 1 top
+	walls_.push_back(new Wall(math::Vector2D(440, 40), math::Vector2D(440, 104)));	//col 2 top
+	walls_.push_back(new Wall(math::Vector2D(520, 40), math::Vector2D(520, 104)));	//col 3 top
+	walls_.push_back(new Wall(math::Vector2D(760, 40), math::Vector2D(760, 248)));	//right
+	walls_.push_back(new Wall(math::Vector2D(40, 248), math::Vector2D(184, 248)));	//bottom 1
+	walls_.push_back(new Wall(math::Vector2D(120, 248), math::Vector2D(120, 200)));	//col 1 bottom
+	walls_.push_back(new Wall(math::Vector2D(264, 248), math::Vector2D(360, 248)));	//bottom 2
+	walls_.push_back(new Wall(math::Vector2D(440, 248), math::Vector2D(440, 184)));	//col 2 bottom
+	walls_.push_back(new Wall(math::Vector2D(440, 248), math::Vector2D(760, 248)));	//bottom 3
+	walls_.push_back(new Wall(math::Vector2D(520, 248), math::Vector2D(520, 184)));	//col 3 bottom
+	
 	return true;
 }
 
@@ -170,9 +196,7 @@ void World::HandleInput(SDL_Event* evt)
 		{
 		case SDLK_RETURN:
 			
-			//pathfinder_->ChangeSource(0);
-			//pathfinder_->ChangeTarget(1849);
-			pathfinder_->CreateAStarPath();
+			
 
 			break;
 		case SDLK_SPACE:
@@ -209,7 +233,22 @@ void World::Draw()
 		tiles_[t]->Draw();
 	}
 
-	pathfinder_->Draw(Game->GetRenderer());
+	std::vector<Wall*>::const_iterator itWall;
+	if (walls_.size() > 0)
+	{
+		for (itWall = walls_.begin(); itWall != walls_.end(); ++itWall)
+		{
+			SDL_SetRenderDrawColor(Game->GetRenderer(), 0, 0, 255, SDL_ALPHA_OPAQUE);
+			SDL_RenderDrawLine(
+				Game->GetRenderer(), 
+				(*itWall)->GetFrom().x, 
+				(*itWall)->GetFrom().y, 
+				(*itWall)->GetTo().x,
+				(*itWall)->GetTo().y
+			);
+		}
+	}
+	//pathfinder_->Draw(Game->GetRenderer());
 
 	player_->Draw();
 
@@ -233,4 +272,100 @@ void World::SetSpriteSheetClips()
 	clips_[TILE_ENEMY] = new SDL_Rect{ TILE_WIDTH * 2, 0, TILE_WIDTH, TILE_HEIGHT };
 	clips_[TILE_PLAYER1] = new SDL_Rect{ TILE_WIDTH * 3, 0, TILE_WIDTH, TILE_HEIGHT };
 	clips_[TILE_PLAYER2] = new SDL_Rect{ TILE_WIDTH * 4, 0, TILE_WIDTH, TILE_HEIGHT };
+}
+
+void World::CreateNavGraph()
+{
+	numCellsX_ = TILES_MAP_X;
+	numCellsY_ = TILES_MAP_Y;
+	cellWidth_ = TILE_WIDTH;
+	cellHeight_ = TILE_HEIGHT;
+	
+	CreateGrid();
+}
+
+void World::UpdateNavGraph(int cell, bool available)
+{
+	if (!available) navGraph_->RemoveNode(cell);
+}
+
+void World::CreateGrid()
+{
+	double midX = cellWidth_ / 2;
+	double midY = cellHeight_ / 2;
+
+	for (int row = 0; row < numCellsY_; ++row)
+	{
+		for (int col = 0; col < numCellsX_; ++col)
+		{
+			navGraph_->AddNode(
+				NavGraphNode<>(navGraph_->GetNextFreeNodeIndex(),
+					math::Vector2D(midX + (col * cellWidth_),
+						midY + (row * cellHeight_))
+					));
+		}
+	}
+
+	for (int row = 0; row < numCellsY_; ++row)
+	{
+		for (int col = 0; col < numCellsX_; ++col)
+		{
+			LinkingEdges(row, col);	//add the edges...
+		}
+	}
+}
+
+//check if the node is inside the grid
+bool World::IsValidNeighbour(int x, int y)
+{
+	return !((x < 0) || (x >= numCellsX_) || (y < 0) || (y >= numCellsY_));
+}
+
+//create the edges linking the nodes by NW, N, NE, W, E, SW, S, SE
+void World::LinkingEdges(int row, int col)
+{
+	for (int i = -1; i < 2; ++i)		//goes through the Y
+	{
+		for (int j = -1; j < 2; ++j)	//goes through the X
+		{
+			int nodeX = col + j;
+			int nodeY = row + i;
+
+			if ((i == 0) && (j == 0)) continue; //skip if equal to the current node
+
+			if (IsValidNeighbour(nodeX, nodeY))	//check if the node is inside the grid
+			{
+				int curNode = row * numCellsX_ + col;
+				int neighbourNode = nodeY * numCellsX_ + nodeX;
+
+				math::Vector2D nodePos = navGraph_->GetNode(curNode).GetPosition();
+				math::Vector2D neighbourPos = navGraph_->GetNode(neighbourNode).GetPosition();
+
+				double dist = math::distance(neighbourPos, nodePos);
+
+				NavGraphEdge edge(curNode, neighbourNode, dist);
+				navGraph_->AddEdge(edge);
+
+				NavGraphEdge inverseEdge(neighbourNode, curNode, dist);
+				navGraph_->AddEdge(inverseEdge);
+			}
+		}
+	}
+}
+
+bool World::HasLOS(math::Vector2D origin, math::Vector2D target)const
+{
+	return !DoWallsObstructLineSegment(origin, target, walls_);
+}
+
+bool World::HasFOV(math::Vector2D origin, math::Vector2D direction, math::Vector2D target, double fov)const
+{
+	if (HasOriginFOVonTarget(origin, direction, target, fov))
+	{
+		if (HasLOS(origin, target))
+		{
+			return true;
+		}
+	}
+	return false;
 }

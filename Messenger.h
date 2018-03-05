@@ -10,7 +10,7 @@ class GameObject;
 class Messenger
 {
 private:
-	Messenger(){};
+	Messenger(){}
 	Messenger(const Messenger&);
 	Messenger& operator=(const Messenger&);
 

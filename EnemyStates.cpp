@@ -1,6 +1,10 @@
 #include "EnemyStates.h"
 
-//GLOBAL
+/*-----------------------------------------------------------------------
+
+                           GLOBAL
+
+-----------------------------------------------------------------------*/
 
 EnemyGlobal* EnemyGlobal::GetInstance()
 {
@@ -16,6 +20,10 @@ void EnemyGlobal::Enter(Enemy* e)
 void EnemyGlobal::Execute(Enemy* e)
 {
 	//std::cout << "Execute global "<< e->GetId()<< std::endl;
+	if (e->SeeingPlayer())
+	{
+		Msger->SendMsg(e->GetId(), e->GetId(), 0, MessageType::Msg_Chase, NULL);
+	}
 }
 
 void EnemyGlobal::Exit(Enemy* e)
@@ -34,13 +42,22 @@ bool EnemyGlobal::OnMessage(Enemy* e, const Message& msg)
 		e->TakeDamage(100);
 		e->GetFSM()->ChangeState(EnemyDying::GetInstance());
 		break;
+
+	case Msg_Chase:
+		e->GetFSM()->ChangeState(EnemyChase::GetInstance());
+		break;
+
 	default:
 		break;
 	}
 	return false;
 }
 
-//IDLE
+/*-----------------------------------------------------------------------
+
+                 IDLE
+
+-----------------------------------------------------------------------*/
 
 EnemyIdle* EnemyIdle::GetInstance()
 {
@@ -51,7 +68,8 @@ EnemyIdle* EnemyIdle::GetInstance()
 void EnemyIdle::Enter(Enemy* e)
 {
 	std::cout << "Enter idle " << e->GetId() << std::endl;
-	Msger->SendMsg(e->GetId(), e->GetId(), 1.0f, MessageType::Msg_StartPatrolling, NULL);
+	//Msger->SendMsg(e->GetId(), e->GetId(), 1.0f, MessageType::Msg_StartPatrolling, NULL);
+	//Msger->SendMsg(e->GetId(), e->GetId(), 5.0f, MessageType::Msg_Chase, NULL);
 }
 
 void EnemyIdle::Execute(Enemy* e)
@@ -83,8 +101,11 @@ bool EnemyIdle::OnMessage(Enemy* enemy, const Message& msg)
 	return false;
 }
 
+/*-----------------------------------------------------------------------
 
-//PATROL 
+                     PATROL 
+
+-----------------------------------------------------------------------*/
 
 EnemyPatrol* EnemyPatrol::GetInstance()
 {
@@ -95,7 +116,7 @@ EnemyPatrol* EnemyPatrol::GetInstance()
 void EnemyPatrol::Enter(Enemy* e)
 {
 	std::cout << "Enter Patrol " << e->GetId() << std::endl;
-	Msger->SendMsg(e->GetId(), e->GetId(), 1.0f, MessageType::Msg_Chase, NULL);
+	//Msger->SendMsg(e->GetId(), e->GetId(), 1.0f, MessageType::Msg_Chase, NULL);
 }
 
 void EnemyPatrol::Execute(Enemy* e)
@@ -123,7 +144,11 @@ bool EnemyPatrol::OnMessage(Enemy* enemy, const Message& msg)
 	return false;
 }
 
-//CHASE 
+/*--------------------------------------------------------------------
+
+                CHASE 
+
+--------------------------------------------------------------------*/
 
 EnemyChase* EnemyChase::GetInstance()
 {
@@ -135,13 +160,17 @@ void EnemyChase::Enter(Enemy* e)
 {
 	std::cout << "Enter Chase " << e->GetId() << std::endl;
 	e->SetPlayerAsTarget();
+	e->ChaseTarget();
 	//e->GetSteering()->SwitchOnOff(SteeringBehaviors::seek, true);
-	e->GetSteering()->SwitchOnOff(SteeringBehaviors::arrive, true);
+	//e->GetSteering()->SwitchOnOff(SteeringBehaviors::arrive, true);
 }
 
 void EnemyChase::Execute(Enemy* e)
 {
 	//std::cout << "Execute Chase " << e->GetId() << std::endl;
+	//if(e->GetSteering()->IsPathEnded())
+	//	Msger->SendMsg(e->GetId(), e->GetId(), 0.0f, MessageType::Msg_ChaseEnded, NULL);
+
 }
 
 void EnemyChase::Exit(Enemy* e)
@@ -151,10 +180,23 @@ void EnemyChase::Exit(Enemy* e)
 
 bool EnemyChase::OnMessage(Enemy* enemy, const Message& msg)
 {
+	switch (msg.Msg)
+	{
+	case Msg_ChaseEnded:
+		enemy->GetFSM()->ChangeState(EnemyIdle::GetInstance());
+		break;
+
+	default:
+		break;
+	}
 	return false;
 }
 
-//ATTACK 
+/*--------------------------------------------------------------------
+
+                   ATTACK 
+
+--------------------------------------------------------------------*/
 
 EnemyAttack* EnemyAttack::GetInstance()
 {
@@ -182,7 +224,12 @@ bool EnemyAttack::OnMessage(Enemy* enemy, const Message& msg)
 	return false;
 }
 
-//DYING
+/*--------------------------------------------------------------------
+
+                    DYING
+
+--------------------------------------------------------------------*/
+
 EnemyDying* EnemyDying::GetInstance()
 {
 	static EnemyDying instance;
@@ -192,7 +239,7 @@ EnemyDying* EnemyDying::GetInstance()
 void EnemyDying::Enter(Enemy* e)
 {
 	std::cout << "Enter dying " << e->GetId() << std::endl;
-	Msger->SendMsg(e->GetId(), e->GetId(), 5.0f, Msg_Dead, NULL);
+	Msger->SendMsg(e->GetId(), e->GetId(), 1.0f, Msg_Dead, NULL);
 }
 
 void EnemyDying::Execute(Enemy* e)
@@ -218,7 +265,12 @@ bool EnemyDying::OnMessage(Enemy* enemy, const Message& msg)
 	return false;
 }
 
-//DEAD
+/*--------------------------------------------------------------------
+
+           DEAD
+
+--------------------------------------------------------------------*/
+
 EnemyDead* EnemyDead::GetInstance()
 {
 	static EnemyDead instance;
