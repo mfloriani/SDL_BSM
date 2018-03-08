@@ -2,8 +2,12 @@
 
 enum MessageType{
 	Msg_Blank,
-	Msg_StartPatrolling,
+	Msg_Attack,
+	Msg_Patrol,
+	Msg_Chase,
+	Msg_Die,
 	Msg_BulletHit,
-	Msg_Dead,
-	Msg_Chase
+	Msg_ChaseEnded,
+	Msg_PlayerSpotted,
+	Msg_TargetLost
 };

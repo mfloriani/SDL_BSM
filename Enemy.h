@@ -4,6 +4,8 @@
 #include "Messenger.h"
 #include "World.h"
 #include "SteeringBehaviors.h"
+#include "EnemyStates.h"
+#include "WindowsClock.h"
 
 class Tile;
 class World;
@@ -17,7 +19,13 @@ private:
 	Texture*				sprite_;
 	World*					world_;
 	SteeringBehaviors*		steering_;
-	
+	Pathfinder*				pathfinder_;
+	GameObject*				target_;
+	math::Vector2D			lastTargetPos_;
+
+	float					rateOfFire_ = 0.5f;
+	float					nextShot_ = 0.0f;
+
 public:
 	Enemy(World*			world, 
 		  math::Vector2D	pos, 
@@ -30,7 +38,17 @@ public:
 	virtual bool			HandleMessage(const Message& msg);
 	StateMachine<Enemy>*	GetFSM()const{ return fsm_; }
 	SteeringBehaviors*		GetSteering()const{ return steering_; }
-	void					SetPlayerAsTarget(){ steering_->SetTarget(world_->GetPlayer()->GetPosition()); }
-	void					Rotate();
+	void					SetPlayerAsTarget();
+	void					RotateTo(math::Vector2D dir);
+	void					ChaseTarget();
+	bool					SeeingPlayer();
+	bool					IsCloseToAttack();
+	void					TargetLost();
+	bool					HasTarget()const { return !(target_ == NULL); }
+	void					ShootAtTarget();
+	void					DoPatrolling();
+	void					StopMovement();
+	math::Vector2D			GetLastTargetPos()const { return lastTargetPos_; }
+	void					SetLastTargetPosAsTarget();
 };
 

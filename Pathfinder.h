@@ -11,46 +11,37 @@
 class Pathfinder
 {
 private:
+	enum 
+	{
+		invalid_cell = -1
+	};
 	typedef Graph<NavGraphNode<>, NavGraphEdge> NavGraph;
 	typedef std::list<int>						PathList;
+	typedef std::list<math::Vector2D>			WaypointsList;
 	
-	NavGraph*		graph_;
+	NavGraph&		graph_;
 	PathList		path_;
+	WaypointsList	pathWaypoints_;
 	int				source_;
     int				target_;
-	double			cellWidth_;
-	double			cellHeight_;
-	int				numCellsX_;
-	int				numCellsY_;
-
-private:
-	//create the nodes based on a grid
-	void CreateGrid();
-
-	//create the edges linking the nodes by NW, N, NE, W, E, SW, S, SE
-	void LinkingEdges(int row, int col);
-
-	//check if the node is inside the grid
-	bool IsValidNeighbour(int x, int y);
-
 	
+private:
+	int FindCell(math::Vector2D pos);
 
 public:
-	Pathfinder() :	graph_(NULL), 
-					source_(0), 
-					target_(0), 
-					cellWidth_(0), 
-					cellHeight_(0), 
-					numCellsX_(0), 
-					numCellsY_(0) 
-	{};
-	virtual ~Pathfinder() { delete graph_; };
+	Pathfinder(NavGraph& g) :	graph_(g),
+								source_(invalid_cell),
+								target_(invalid_cell)
+	{}
+	virtual ~Pathfinder() { }
 
-	void Draw(SDL_Renderer* renderer);
-	void CreateGraph();
+	void Draw(SDL_Renderer* r);	
 	void CreateAStarPath();
 	void ChangeSource(const int cell) { source_ = cell; }
 	void ChangeTarget(const int cell) { target_ = cell; }
-	void UpdateGraph(int cell, bool available);
+	void ChangeSource(const math::Vector2D pos) { source_ = FindCell(pos); }
+	void ChangeTarget(const math::Vector2D pos) { target_ = FindCell(pos); }
+	WaypointsList& GetPathWaypoints(){ return pathWaypoints_; }
+
 };
 

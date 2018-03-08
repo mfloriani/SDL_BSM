@@ -1,12 +1,13 @@
 #include "SteeringBehaviors.h"
 
-SteeringBehaviors::SteeringBehaviors(GameObject* agent) : m_agent(agent)
+SteeringBehaviors::SteeringBehaviors(GameObject* agent) : m_agent(agent), m_path(NULL)
 {
 	for (int i = 0; i < BEHAVIORS_COUNT; i++) m_behaviorsStatus[i] = false;
 }
 
 SteeringBehaviors::~SteeringBehaviors()
 {
+	delete m_path;
 }
 
 math::Vector2D SteeringBehaviors::Calculate()
@@ -23,6 +24,11 @@ math::Vector2D SteeringBehaviors::Calculate()
 	if (IsOn(arrive))
 	{
 		force = Arrive(m_target, Deceleration::slow);
+		if (!AccumulateForce(m_steeringForce, force)) return m_steeringForce;
+	}
+	if (IsOn(follow_path))
+	{
+		force = FollowPath();
 		if (!AccumulateForce(m_steeringForce, force)) return m_steeringForce;
 	}
 	
@@ -84,3 +90,18 @@ math::Vector2D SteeringBehaviors::Arrive(math::Vector2D targetPos, Deceleration 
 	return math::Vector2D(0, 0);
 }
 
+math::Vector2D SteeringBehaviors::FollowPath()
+{
+	if (m_path == NULL) 
+		return math::Vector2D(0, 0);//there is no path
+
+	if (m_path->IsCurWaypointClose(m_agent->GetPosition()))
+		m_path->SetNextWaypoint();
+
+	if (!m_path->IsPathEnded())
+		return Seek(m_path->GetCurrentWaypoint());
+	else
+		return Arrive(m_path->GetCurrentWaypoint(), fast);
+
+	return math::Vector2D(0, 0);
+}

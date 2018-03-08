@@ -37,6 +37,9 @@
     <Filter Include="World">
       <UniqueIdentifier>{449b0e0d-16ae-4140-a7fe-05b85d95acf6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="GameObjects\Weapons">
+      <UniqueIdentifier>{7f04e7a2-07de-4a39-82d9-f8967b55d848}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -199,6 +202,24 @@
     </ClInclude>
     <ClInclude Include="AStar.h">
       <Filter>AI\Pathfinding</Filter>
+    </ClInclude>
+    <ClInclude Include="Path.h">
+      <Filter>AI\Steering</Filter>
+    </ClInclude>
+    <ClInclude Include="Wall.h">
+      <Filter>World</Filter>
+    </ClInclude>
+    <ClInclude Include="Geometry.h">
+      <Filter>Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="WorldFunctions.h">
+      <Filter>World</Filter>
+    </ClInclude>
+    <ClInclude Include="Weapon.h">
+      <Filter>GameObjects\Weapons</Filter>
+    </ClInclude>
+    <ClInclude Include="Pistol.h">
+      <Filter>GameObjects\Weapons</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

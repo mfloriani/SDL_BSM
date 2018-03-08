@@ -11,8 +11,8 @@ private:
 	State<go_type>* m_previousState;
 
 public:
-	StateMachine(go_type* owner) : m_owner(owner), m_currentState(NULL), m_globalState(NULL), m_previousState(NULL){};
-	virtual ~StateMachine(){};
+	StateMachine(go_type* owner) : m_owner(owner), m_currentState(NULL), m_globalState(NULL), m_previousState(NULL){}
+	virtual ~StateMachine(){}
 
 	void SetInitialCurState(State<go_type>* s)
 	{

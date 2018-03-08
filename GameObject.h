@@ -29,17 +29,22 @@ protected:
 	SDL_Rect		boxCollider_;
 	
 
-	GameObject(	math::Vector2D pos) :	id_(GetNextId()),
-										position_(pos), 
-										type_(0), 
-										active_(true), 
-										tag_(""), 
-										mass_(1.0f),
-										radianAngle_(0.0f),
-										degreeAngle_(0.0f),
-										velocity_(math::Vector2D(0,0)),
-										maxForce_(2.0f),
-										maxVelocity_(150.0f)
+	GameObject(	
+		math::Vector2D	pos,
+		math::Vector2D	dir
+	) :	
+		id_(GetNextId()),
+		position_(pos), 
+		type_(0), 
+		active_(true), 
+		tag_(""), 
+		mass_(1.0f),
+		radianAngle_(0.0f),
+		degreeAngle_(0.0f),
+		velocity_(math::Vector2D(0,0)),
+		maxForce_(2.0f),
+		maxVelocity_(150.0f),
+		direction_(dir)
 	{
 		UpdateBoxCollider();
 	}
@@ -53,10 +58,10 @@ protected:
 	}
 
 public:
-	virtual		 ~GameObject(){};
-	virtual void Update(float secs)=0;
-	virtual void Draw()=0;
-	virtual bool HandleMessage(const Message& msg) = 0;
+	virtual			~GameObject(){}
+	virtual void	Update(float secs)=0;
+	virtual void	Draw()=0;
+	virtual bool	HandleMessage(const Message& msg) = 0;
 
 	int				GetId() const{ return id_; }
 	int				GetType() const{ return type_; }
@@ -65,10 +70,6 @@ public:
 	void			SetActive(bool active){ active_ = active; }
 	math::Vector2D	GetPosition() const{ return position_; }
 	math::Vector2D	GetDirection() const{ return direction_; }
-	//math::Vector2D	SetDirection(math::Vector2D dir) { direction_ = dir; }
-	//void			IncRadAngle(float rad){ radianAngle_ += rad; }
-	//void			IncDegAngle(float deg){ degreeAngle_ += deg; }
-	//float			GetDegAngle()const{ return degreeAngle_; }
 	SDL_Rect		GetBoxCollider()const{ return boxCollider_; }
 	float			GetMaxForce()const{ return maxForce_; }
 	float			GetMaxVelocity()const{ return maxVelocity_; }

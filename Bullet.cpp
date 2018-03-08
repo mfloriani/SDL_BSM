@@ -1,27 +1,19 @@
 #include "Bullet.h"
-#include "GameMessages.h"
-
-Bullet::Bullet(Texture*			sprite, 
-			   GameObject*		owner,
-			   World*			world) : GameObject(owner->GetPosition()),
-											owner_(owner),
-											sprite_(sprite),
-											world_(world)
-{
-	direction_ = owner->GetDirection();
-}
-
-
-Bullet::~Bullet()
-{
-}
 
 void Bullet::Update(float secs)
 {
 	if (!IsActive()) return;	//dont process this gameobject
 
 	position_ += direction_ * 1000.0f * secs;
-	UpdateBoxCollider();
+	//UpdateBoxCollider();
+
+	boxCollider_.x = position_.x;
+	boxCollider_.y = position_.y;
+	boxCollider_.w = sprite_.w;
+	boxCollider_.h = sprite_.h;
+
+	sprite_.x = position_.x;
+	sprite_.y = position_.y;
 
 	HandleCollision();
 }
@@ -31,12 +23,12 @@ void Bullet::HandleCollision()
 	std::vector<GameObject*>::iterator go;
 	for (go = world_->GetCollidableObjects()->begin(); go != world_->GetCollidableObjects()->end(); ++go)
 	{
-		if ((*go) != NULL && (*go)->IsActive() /*&& (*go)->GetId() != GetId()*/)
+		if ((*go) != NULL && (*go)->IsActive() && (*go)->GetId() != ownerId_)
 		{
 			if (SDL_HasIntersection(&boxCollider_, &(*go)->GetBoxCollider()))
 			{
 				//std::cout << owner_->GetId() << " | " << (*go)->GetId() << std::endl;
-				Msger->SendMsg(owner_->GetId(), (*go)->GetId(), 0.0f, Msg_BulletHit, NULL);
+				Msger->SendMsg(ownerId_, (*go)->GetId(), 0.0f, Msg_BulletHit, NULL);
 			}
 		}
 	}
@@ -63,16 +55,14 @@ void Bullet::HandleCollision()
 			}
 		}
 	}
-	
 }
 
 void Bullet::Draw()
 {
 	if (!IsActive()) return;	//dont process this gameobject
 
-	sprite_->Render(position_.x, position_.y, NULL, degreeAngle_, NULL, SDL_FLIP_NONE);
+	SDL_RenderDrawRect(Game->GetRenderer(), &sprite_);
 }
-
 
 bool Bullet::HandleMessage(const Message& msg)
 {

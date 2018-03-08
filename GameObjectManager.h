@@ -14,7 +14,7 @@ private:
 	GoMap m_goMap;
 
 private:
-	GameObjectManager(){};
+	GameObjectManager(){}
 	GameObjectManager(const GameObjectManager&);
 	GameObjectManager& operator=(const GameObjectManager&);
 

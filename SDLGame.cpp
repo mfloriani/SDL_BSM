@@ -1,9 +1,5 @@
 #include "SDLGame.h"
-#include "Messenger.h"
-#include <SDL_image.h>
-#include <SDL_mixer.h>
-#include <string>
-#include "Timer.h"
+
 
 SDLGame* SDLGame::GetInstance()
 {
@@ -97,7 +93,7 @@ int SDLGame::Run()
 	Uint32 before = SDL_GetTicks();
 	Uint32 now = 0;
 	int framesCount = 0;
-
+	
 	while (!quit)
 	{
 		//calculate the time that has passed since last frame
@@ -127,7 +123,7 @@ int SDLGame::Run()
 		SDL_RenderClear(renderer_);
 
 		world_->Draw();
-
+		
 		SDL_RenderPresent(renderer_);
 		++framesCount;
 	}

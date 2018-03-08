@@ -27,7 +27,7 @@ public:
 	Graph() : nextNodeIndex_(0){}
 
 	const node_type&	GetNode(int id)const { return nodes_[id]; }
-	node_type&			GetNode(int id) { return nodes_[id]; };
+	node_type&			GetNode(int id) { return nodes_[id]; }
 	int					AddNode(node_type node);
 	void				RemoveNode(int node);
 	bool				IsNodePresent(int node)const;

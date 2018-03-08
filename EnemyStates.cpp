@@ -1,6 +1,10 @@
 #include "EnemyStates.h"
 
-//GLOBAL
+/*-----------------------------------------------------------------------
+
+                           GLOBAL
+
+-----------------------------------------------------------------------*/
 
 EnemyGlobal* EnemyGlobal::GetInstance()
 {
@@ -15,7 +19,22 @@ void EnemyGlobal::Enter(Enemy* e)
 
 void EnemyGlobal::Execute(Enemy* e)
 {
+	if (e->GetFSM()->IsInState(*EnemyDying::GetInstance()) || e->GetFSM()->IsInState(*EnemyDead::GetInstance()))
+	{
+		return;
+	}
+
 	//std::cout << "Execute global "<< e->GetId()<< std::endl;
+	if (e->SeeingPlayer())
+	{
+		//Msger->SendMsg(e->GetId(), e->GetId(), 0, MessageType::Msg_PlayerSpotted, NULL);
+		e->SetPlayerAsTarget();
+	}
+	else if(e->HasTarget())
+	{
+		//Msger->SendMsg(e->GetId(), e->GetId(), 0, MessageType::Msg_TargetLost, NULL);
+		e->TargetLost();
+	}
 }
 
 void EnemyGlobal::Exit(Enemy* e)
@@ -28,19 +47,43 @@ bool EnemyGlobal::OnMessage(Enemy* e, const Message& msg)
 	switch (msg.Msg)
 	{
 	case Msg_BulletHit:
+
 		if (e->GetFSM()->IsInState(*EnemyDying::GetInstance())) return false;
 
 		std::cout << "Enemy " << e->GetId() << " hit " << std::endl;
 		e->TakeDamage(100);
 		e->GetFSM()->ChangeState(EnemyDying::GetInstance());
 		break;
+
+	case Msg_PlayerSpotted:
+		
+		
+
+		/*if(e->IsCloseToAttack())
+			e->GetFSM()->ChangeState(EnemyAttack::GetInstance());
+		else
+			e->GetFSM()->ChangeState(EnemyChase::GetInstance());*/
+
+		break;
+
+	case Msg_TargetLost:
+
+		
+		//e->GetFSM()->ChangeState(EnemyIdle::GetInstance());
+
+		break;
+
 	default:
 		break;
 	}
 	return false;
 }
 
-//IDLE
+/*-----------------------------------------------------------------------
+
+                 IDLE
+
+-----------------------------------------------------------------------*/
 
 EnemyIdle* EnemyIdle::GetInstance()
 {
@@ -51,13 +94,26 @@ EnemyIdle* EnemyIdle::GetInstance()
 void EnemyIdle::Enter(Enemy* e)
 {
 	std::cout << "Enter idle " << e->GetId() << std::endl;
-	Msger->SendMsg(e->GetId(), e->GetId(), 1.0f, MessageType::Msg_StartPatrolling, NULL);
+
+	Msger->SendMsg(e->GetId(), e->GetId(), 3.0f, MessageType::Msg_Patrol, NULL);
+	
 }
 
 void EnemyIdle::Execute(Enemy* e)
 {
 	//std::cout << "Execute idle " << e->GetId() << std::endl;
 	
+	if (e->HasTarget())
+	{
+		if (e->IsCloseToAttack())
+		{
+			e->GetFSM()->ChangeState(EnemyAttack::GetInstance());
+		}
+		else
+		{
+			e->GetFSM()->ChangeState(EnemyChase::GetInstance());
+		}
+	}
 }
 
 void EnemyIdle::Exit(Enemy* e)
@@ -69,13 +125,11 @@ bool EnemyIdle::OnMessage(Enemy* enemy, const Message& msg)
 {
 	switch (msg.Msg)
 	{
-	case Msg_StartPatrolling:
+	case Msg_Patrol:
+
 		enemy->GetFSM()->ChangeState(EnemyPatrol::GetInstance());
 		break;
 
-	case Msg_Chase:
-		enemy->GetFSM()->ChangeState(EnemyChase::GetInstance());
-		break;
 
 	default:
 		break;
@@ -83,8 +137,11 @@ bool EnemyIdle::OnMessage(Enemy* enemy, const Message& msg)
 	return false;
 }
 
+/*-----------------------------------------------------------------------
 
-//PATROL 
+                     PATROL 
+
+-----------------------------------------------------------------------*/
 
 EnemyPatrol* EnemyPatrol::GetInstance()
 {
@@ -95,13 +152,25 @@ EnemyPatrol* EnemyPatrol::GetInstance()
 void EnemyPatrol::Enter(Enemy* e)
 {
 	std::cout << "Enter Patrol " << e->GetId() << std::endl;
-	Msger->SendMsg(e->GetId(), e->GetId(), 1.0f, MessageType::Msg_Chase, NULL);
+	//Msger->SendMsg(e->GetId(), e->GetId(), 1.0f, MessageType::Msg_Chase, NULL);
 }
 
 void EnemyPatrol::Execute(Enemy* e)
 {
-	//std::cout << "Execute Patrol " << e->GetId() << std::endl;
+	e->DoPatrolling();
 
+	//std::cout << "Execute Patrol " << e->GetId() << std::endl;
+	if (e->HasTarget())
+	{
+		if (e->IsCloseToAttack())
+		{
+			e->GetFSM()->ChangeState(EnemyAttack::GetInstance());
+		}
+		else
+		{
+			e->GetFSM()->ChangeState(EnemyChase::GetInstance());
+		}
+	}
 }
 
 void EnemyPatrol::Exit(Enemy* e)
@@ -113,9 +182,7 @@ bool EnemyPatrol::OnMessage(Enemy* enemy, const Message& msg)
 {
 	switch (msg.Msg)
 	{
-	case Msg_Chase:
-		enemy->GetFSM()->ChangeState(EnemyChase::GetInstance());
-		break;
+	
 
 	default:
 		break;
@@ -123,7 +190,11 @@ bool EnemyPatrol::OnMessage(Enemy* enemy, const Message& msg)
 	return false;
 }
 
-//CHASE 
+/*--------------------------------------------------------------------
+
+                CHASE 
+
+--------------------------------------------------------------------*/
 
 EnemyChase* EnemyChase::GetInstance()
 {
@@ -134,14 +205,23 @@ EnemyChase* EnemyChase::GetInstance()
 void EnemyChase::Enter(Enemy* e)
 {
 	std::cout << "Enter Chase " << e->GetId() << std::endl;
-	e->SetPlayerAsTarget();
-	//e->GetSteering()->SwitchOnOff(SteeringBehaviors::seek, true);
-	e->GetSteering()->SwitchOnOff(SteeringBehaviors::arrive, true);
+	
+	e->ChaseTarget();
 }
 
 void EnemyChase::Execute(Enemy* e)
 {
 	//std::cout << "Execute Chase " << e->GetId() << std::endl;
+	if (e->IsCloseToAttack())
+	{
+		e->GetFSM()->ChangeState(EnemyAttack::GetInstance());
+		return;
+	}
+	
+	if (e->GetSteering()->IsPathEnded())
+	{
+		e->GetFSM()->ChangeState(EnemyIdle::GetInstance());
+	}
 }
 
 void EnemyChase::Exit(Enemy* e)
@@ -151,10 +231,28 @@ void EnemyChase::Exit(Enemy* e)
 
 bool EnemyChase::OnMessage(Enemy* enemy, const Message& msg)
 {
+	switch (msg.Msg)
+	{
+	case Msg_ChaseEnded:
+
+		//enemy->GetFSM()->ChangeState(EnemyIdle::GetInstance());
+		break;
+
+	case Msg_TargetLost:
+
+		break;
+
+	default:
+		break;
+	}
 	return false;
 }
 
-//ATTACK 
+/*--------------------------------------------------------------------
+
+                   ATTACK 
+
+--------------------------------------------------------------------*/
 
 EnemyAttack* EnemyAttack::GetInstance()
 {
@@ -169,20 +267,48 @@ void EnemyAttack::Enter(Enemy* e)
 
 void EnemyAttack::Execute(Enemy* e)
 {
-	std::cout << "Execute Attack " << e->GetId() << std::endl;
+	e->ShootAtTarget();
+
+	if (e->HasTarget())
+	{
+		if (!e->IsCloseToAttack())
+		{
+			e->GetFSM()->ChangeState(EnemyChase::GetInstance());
+		}
+	}
+	else
+	{
+		//e->GetFSM()->ChangeState(EnemyIdle::GetInstance());
+		e->GetFSM()->ChangeState(EnemyChase::GetInstance());
+	}
+	//std::cout << "Execute Attack " << e->GetId() << std::endl;
 }
 
 void EnemyAttack::Exit(Enemy* e)
 {
 	std::cout << "Exit Attack " << e->GetId() << std::endl;
+	e->SetLastTargetPosAsTarget();
 }
 
 bool EnemyAttack::OnMessage(Enemy* enemy, const Message& msg)
 {
+	switch (msg.Msg)
+	{
+	
+	
+
+	default:
+		break;
+	}
 	return false;
 }
 
-//DYING
+/*--------------------------------------------------------------------
+
+                    DYING
+
+--------------------------------------------------------------------*/
+
 EnemyDying* EnemyDying::GetInstance()
 {
 	static EnemyDying instance;
@@ -192,7 +318,7 @@ EnemyDying* EnemyDying::GetInstance()
 void EnemyDying::Enter(Enemy* e)
 {
 	std::cout << "Enter dying " << e->GetId() << std::endl;
-	Msger->SendMsg(e->GetId(), e->GetId(), 5.0f, Msg_Dead, NULL);
+	Msger->SendMsg(e->GetId(), e->GetId(), 1.0f, Msg_Die, NULL);
 }
 
 void EnemyDying::Execute(Enemy* e)
@@ -209,7 +335,7 @@ bool EnemyDying::OnMessage(Enemy* enemy, const Message& msg)
 {
 	switch (msg.Msg)
 	{
-	case Msg_Dead:
+	case Msg_Die:
 		enemy->GetFSM()->ChangeState(EnemyDead::GetInstance());
 		break;
 	default:
@@ -218,7 +344,12 @@ bool EnemyDying::OnMessage(Enemy* enemy, const Message& msg)
 	return false;
 }
 
-//DEAD
+/*--------------------------------------------------------------------
+
+           DEAD
+
+--------------------------------------------------------------------*/
+
 EnemyDead* EnemyDead::GetInstance()
 {
 	static EnemyDead instance;
@@ -244,5 +375,14 @@ void EnemyDead::Exit(Enemy* e)
 
 bool EnemyDead::OnMessage(Enemy* enemy, const Message& msg)
 {
+	switch (msg.Msg)
+	{
+	case Msg_Blank:
+		//enemy->GetFSM()->ChangeState(EnemyIdle::GetInstance());
+		break;
+
+	default:
+		break;
+	}
 	return false;
 }

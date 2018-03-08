@@ -14,7 +14,7 @@ class Enemy;
 class EnemyGlobal : public State<Enemy>
 {
 private:
-	EnemyGlobal(){};
+	EnemyGlobal(){}
 	EnemyGlobal(const EnemyGlobal&);
 	EnemyGlobal& operator=(const EnemyGlobal&);
 
@@ -31,7 +31,7 @@ public:
 class EnemyIdle : public State<Enemy>
 {
 private:
-	EnemyIdle(){};
+	EnemyIdle(){}
 	EnemyIdle(const EnemyIdle&);
 	EnemyIdle& operator=(const EnemyIdle&);
 
@@ -48,7 +48,7 @@ public:
 class EnemyPatrol : public State<Enemy>
 {
 private:
-	EnemyPatrol(){};
+	EnemyPatrol(){}
 	EnemyPatrol(const EnemyPatrol&);
 	EnemyPatrol& operator=(const EnemyPatrol&);	
 
@@ -65,7 +65,7 @@ public:
 class EnemyChase : public State<Enemy>
 {
 private:
-	EnemyChase(){};
+	EnemyChase(){}
 	EnemyChase(const EnemyChase&);
 	EnemyChase& operator=(const EnemyChase&);
 
@@ -82,7 +82,7 @@ public:
 class EnemyAttack : public State<Enemy>
 {
 private:
-	EnemyAttack(){};
+	EnemyAttack(){}
 	EnemyAttack(const EnemyAttack&);
 	EnemyAttack& operator=(const EnemyAttack&);
 
@@ -99,7 +99,7 @@ public:
 class EnemyDying : public State<Enemy>
 {
 private:
-	EnemyDying(){};
+	EnemyDying(){}
 	EnemyDying(const EnemyDying&);
 	EnemyDying& operator=(const EnemyDying&);
 
@@ -116,7 +116,7 @@ public:
 class EnemyDead : public State<Enemy>
 {
 private:
-	EnemyDead(){};
+	EnemyDead(){}
 	EnemyDead(const EnemyDead&);
 	EnemyDead& operator=(const EnemyDead&);
 

@@ -3,6 +3,7 @@
 #include "GameObject.h"
 #include "Texture.h"
 #include "World.h"
+#include "GameMessages.h"
 
 class World;
 class GameObject;
@@ -10,7 +11,6 @@ class GameObject;
 class Player : public GameObject
 {
 private:
-	Texture*		m_bulletSprite;
 	Texture*		sprite_;
 	math::Vector2D	aim_;
 	World*			world_;
@@ -30,8 +30,7 @@ private:
 public:
 	Player(World*			world, 
 		   math::Vector2D	pos, 
-		   Texture*			sprite, 
-		   Texture*			bulletSprite);
+		   Texture*			sprite);
 
 	virtual	~Player();
 	void	HandleInput(SDL_Event *e);

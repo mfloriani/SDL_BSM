@@ -1,14 +1,15 @@
 #include "Player.h"
 
 
-Player::Player(	World*			world, 
-				math::Vector2D	pos, 
-				Texture*		sprite, 
-				Texture*		bulletSprite):	GameObject(pos), 
-												m_bulletSprite(bulletSprite), 
-												sprite_(sprite),
-												aim_(math::Vector2D(0,0)),
-												world_(world)
+Player::Player(	
+	World*			world, 
+	math::Vector2D	pos, 
+	Texture*		sprite
+):	
+	GameObject(pos, math::Vector2D(1, 0)),
+	sprite_(sprite),
+	aim_(math::Vector2D(0,0)),
+	world_(world)
 {
 }
 
@@ -108,12 +109,12 @@ math::Vector2D Player::CalcForces()
 void Player::Update(float secs)
 {
 	Rotate();
-
+	
 	if (m_fireButtonPressed && lastShot_ >= rateOfFire_)
 	{
 		m_fireButtonPressed = false;
 		lastShot_ = 0;
-		world_->AddNewBullet(this);
+		world_->AddNewBullet(GetId(), position_, direction_);
 	}
 	lastShot_ += secs;
 
@@ -166,6 +167,15 @@ void Player::Update(float secs)
 
 bool Player::HandleMessage(const Message& msg)
 {
+	std::cout << "I got a message: " << msg.Msg << std::endl;
+	switch (msg.Msg)
+	{
+	case MessageType::Msg_BulletHit:
+		SetActive(false);
+		break;
+	default:
+		break;
+	}
 	return false;
 }
 

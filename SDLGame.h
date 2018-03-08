@@ -2,13 +2,18 @@
 #include <SDL.h>
 #include <SDL_ttf.h>
 #include "World.h"
+#include "Messenger.h"
+#include <SDL_image.h>
+#include <SDL_mixer.h>
+#include <string>
+#include "Timer.h"
 
 #define Game SDLGame::GetInstance()
 
 class SDLGame
 {
 private:
-	SDLGame(){};
+	SDLGame(){}
 	SDLGame(const SDLGame&);
 	SDLGame& operator=(const SDLGame&);
 	bool Initialize();
