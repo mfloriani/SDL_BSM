@@ -3,7 +3,7 @@
 
 Enemy::Enemy(World*			world, 
 			 math::Vector2D pos, 
-			 Texture*		sprite) :	GameObject(pos), 
+			 Texture*		sprite) :	GameObject(pos, math::Vector2D(1, 0)),
 										sprite_(sprite),
 										world_(world)
 {
@@ -47,7 +47,9 @@ void Enemy::Update(float secs)
 	position_ += velocity_ * secs;
 
 	UpdateBoxCollider();
-	Rotate();
+
+	//if(velocity_.size() > 0.00001f)	
+		RotateTo(velocity_);
 }
 
 void Enemy::Draw()
@@ -82,16 +84,16 @@ bool Enemy::HandleMessage(const Message& msg)
 	return fsm_->HandleMessage(msg);
 }
 
-void Enemy::Rotate()
+void Enemy::RotateTo(math::Vector2D dir)
 {
 	//if (velocity_ == direction_) return;
-	if (velocity_.isZero()) return;
+	if (dir.isZero()) return;
 
-	math::Vector2D vel = velocity_;
+	math::Vector2D vel = dir;
 	vel.normalize();
 
-	math::Vector2D dir = direction_;
-	float angle = dir.relativeAngleBetween(vel);
+	math::Vector2D curDir = direction_;
+	float angle = curDir.relativeAngleBetween(vel);
 	direction_ = vel;
 
 	if (angle != 0) angle *= -1;
@@ -100,26 +102,90 @@ void Enemy::Rotate()
 	degreeAngle_ += math::toDegrees(angle);
 }
 
+void Enemy::StopMovement()
+{
+	steering_->SwitchOnOff(SteeringBehaviors::BehaviorsType::follow_path, false);
+	velocity_ = math::Vector2D();
+}
+
 void Enemy::SetPlayerAsTarget()
 {
-	math::Vector2D pos = world_->GetPlayer()->GetPosition();
+	target_ = world_->GetPlayer();
+	math::Vector2D pos = target_->GetPosition();
+	lastTargetPos_ = pos;
+
 	steering_->SetTarget(pos);
 
 	pathfinder_->ChangeSource(GetPosition());
 	pathfinder_->ChangeTarget(pos);
 }
 
+void Enemy::SetLastTargetPosAsTarget()
+{
+	steering_->SetTarget(lastTargetPos_);
+
+	pathfinder_->ChangeSource(position_);
+	pathfinder_->ChangeTarget(lastTargetPos_);
+}
+
 void Enemy::ChaseTarget()
 {
+	//if (!HasTarget()) return;
+
 	pathfinder_->CreateAStarPath();
 
 	steering_->SetNewPath(pathfinder_->GetPathWaypoints());
 	steering_->SwitchOnOff(SteeringBehaviors::BehaviorsType::follow_path, true);
 }
 
-bool Enemy::SeeingPlayer()const
+bool Enemy::SeeingPlayer()
 {
-	if (world_->HasFOV(GetPosition(), GetDirection(), world_->GetPlayer()->GetPosition(), 135)) return true;
-	
+	if (world_->HasFOV(GetPosition(), GetDirection(), world_->GetPlayer()->GetPosition(), 135))
+	{
+		SetPlayerAsTarget();
+		return true;
+	}
 	return false;
+}
+
+bool Enemy::IsCloseToAttack()
+{
+	if (!HasTarget()) return false;
+
+	// std::cout << math::distanceSqr(target_->GetPosition(), GetPosition()) << std::endl;
+
+	if (math::distanceSqr(target_->GetPosition(), GetPosition()) < 300000.0f)
+	{
+		//std::cout << "Die MF " << std::endl;
+		return true;
+	}
+
+
+	return false;
+}
+
+void Enemy::TargetLost()
+{
+	target_ = NULL;
+}
+
+void Enemy::ShootAtTarget()
+{
+	if (!HasTarget()) return;
+
+	StopMovement();
+	math::Vector2D dir = target_->GetPosition() - position_;
+	RotateTo(dir);
+
+	if (WinClock->GetCurTime() > nextShot_)
+	{
+		nextShot_ = WinClock->GetCurTime() + (1 / rateOfFire_);
+		//std::cout << "Die MF " << std::endl;
+		world_->AddNewBullet(GetId(), position_, direction_);
+	}
+}
+
+void Enemy::DoPatrolling()
+{
+
 }

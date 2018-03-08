@@ -21,15 +21,15 @@ private:
 	typedef Graph<NavGraphNode<>, NavGraphEdge> NavGraph;
 
 private:
-	std::vector<GameObject*>*	objects_;
+	std::vector<GameObject*>*	gameObjects_;
+	std::vector<GameObject*>*	collidableObjects_;
+	std::vector<GameObject*>*	projectiles_;
 	Tile*						tiles_[TILES_MAP_COUNT];
 	Player*						player_;
 	Texture*					playerSprite_;
-	Texture*					bulletSprite_;
 	Texture*					enemySprite_;
 	Texture*					spriteSheet_;
 	SDL_Rect*					clips_[TILES_SPRITESHEET];
-	std::vector<GameObject*>*	collidableObjects_;
 	NavGraph*					navGraph_;
 	double						cellWidth_;
 	double						cellHeight_;
@@ -48,7 +48,7 @@ public:
 	void SetSpriteSheetClips();
 	void AddNewEnemy(math::Vector2D pos);
 	void AddNewPlayer(math::Vector2D pos);
-	void AddNewBullet(GameObject* owner);
+	void AddNewBullet(int id, math::Vector2D pos, math::Vector2D dir);
 	void HandleInput(SDL_Event* evt);
 	void Update(float secs);
 	void Draw();
@@ -61,7 +61,7 @@ public:
 	bool HasFOV(math::Vector2D origin, math::Vector2D direction, math::Vector2D target, double fov)const;
 
 	Player*						GetPlayer()const{ return player_; }
-	std::vector<GameObject*>*	GetGameObjects()const{ return objects_; }
+	std::vector<GameObject*>*	GetGameObjects()const{ return gameObjects_; }
 	Tile*const*					GetTiles() const{ return tiles_; }
 	std::vector<GameObject*>*	GetCollidableObjects()const{ return collidableObjects_; }
 	NavGraph&					GetNavGraph()const { return *navGraph_; }

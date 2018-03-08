@@ -6,12 +6,12 @@ World::World(): cellWidth_(0),
 				numCellsX_(0),
 				numCellsY_(0)
 {
-	objects_ = new std::vector<GameObject*>();
+	gameObjects_ = new std::vector<GameObject*>();
 	collidableObjects_ = new std::vector<GameObject*>();
+	projectiles_ = new std::vector<GameObject*>();
 	playerSprite_ = new Texture();
 	enemySprite_ = new Texture();
 	spriteSheet_ = new Texture();
-	bulletSprite_ = new Texture();
 	player_ = nullptr;
 	navGraph_ = new NavGraph();
 	
@@ -25,17 +25,26 @@ World::~World()
 	playerSprite_->Free();
 	enemySprite_->Free();
 	spriteSheet_->Free();
-	bulletSprite_->Free();
 
 	std::vector<GameObject*>::iterator it;
-	if (objects_->size() > 0)
+
+	if (gameObjects_->size() > 0)
 	{
-		for (it = objects_->begin(); it != objects_->end(); ++it)
+		for (it = gameObjects_->begin(); it != gameObjects_->end(); ++it)
 		{
 			if ((*it) != NULL) delete (*it);
 		}
 	}
-	delete objects_;
+	delete gameObjects_;
+
+	if (projectiles_->size() > 0)
+	{
+		for (it = projectiles_->begin(); it != projectiles_->end(); ++it)
+		{
+			if ((*it) != NULL) delete (*it);
+		}
+	}
+	delete projectiles_;
 
 	for (int i=0; i < TILES_MAP_COUNT; i++)
 	{
@@ -71,8 +80,6 @@ bool World::LoadAssets()
 	if (!spriteSheet_->LoadFromFile(Game->GetRenderer(), "spriteSheet16x16.png")) return false;
 
 	if (!playerSprite_->LoadFromFile(Game->GetRenderer(), "player1.png")) return false;
-
-	if (!bulletSprite_->LoadFromFile(Game->GetRenderer(), "bullet1.png")) return false;
 
 	if (!enemySprite_->LoadFromFile(Game->GetRenderer(), "enemy.png")) return false;
 
@@ -171,21 +178,22 @@ bool World::LoadScene()
 void World::AddNewEnemy(math::Vector2D pos)
 {
 	Enemy* en = new Enemy(this, pos, enemySprite_);
-	objects_->push_back(en);
+	gameObjects_->push_back(en);
 	GoManager->AddGameObject(en);
 	collidableObjects_->push_back(en);
 }
 
 void World::AddNewPlayer(math::Vector2D pos)
 {
-	player_ = new Player(this, pos, playerSprite_, bulletSprite_);
+	player_ = new Player(this, pos, playerSprite_);
+	collidableObjects_->push_back(player_);
 	GoManager->AddGameObject(player_);
 }
 
-void World::AddNewBullet(GameObject* owner)
+void World::AddNewBullet(int id, math::Vector2D pos, math::Vector2D	dir)
 {
-	Bullet* bullet = new Bullet(bulletSprite_, owner, this);
-	objects_->push_back(bullet);
+	Bullet* bullet = new Bullet(this, id, pos, dir);
+	projectiles_->push_back(bullet);
 }
 
 void World::HandleInput(SDL_Event* evt)
@@ -209,12 +217,24 @@ void World::HandleInput(SDL_Event* evt)
 
 void World::Update(float secs)
 {
+	std::vector<GameObject*>::iterator projIT;
+	if (projectiles_->size() > 0)
+	{
+		for (projIT = projectiles_->begin(); projIT != projectiles_->end(); ++projIT)
+		{
+			if ((*projIT) != NULL && (*projIT)->IsActive())
+			{
+				(*projIT)->Update(secs);
+			}
+		}
+	}
+
 	player_->Update(secs);
 
-	std::vector<GameObject*>::iterator go;
-	if (objects_->size() > 0)
+	std::vector<GameObject*>::iterator go = gameObjects_->begin();
+	if (gameObjects_->size() > 0)
 	{
-		for (go = objects_->begin(); go != objects_->end(); ++go)
+		for (go; go != gameObjects_->end(); go++)
 		{
 			if ((*go) != NULL && (*go)->IsActive())
 			{
@@ -253,13 +273,25 @@ void World::Draw()
 	player_->Draw();
 
 	std::vector<GameObject*>::iterator go;
-	if (objects_->size() > 0)
+	if (gameObjects_->size() > 0)
 	{
-		for (go = objects_->begin(); go != objects_->end(); ++go)
+		for (go = gameObjects_->begin(); go != gameObjects_->end(); ++go)
 		{
 			if ((*go) != NULL && (*go)->IsActive())
 			{
 				(*go)->Draw();
+			}
+		}
+	}
+
+	std::vector<GameObject*>::iterator projIT;
+	if (projectiles_->size() > 0)
+	{
+		for (projIT = projectiles_->begin(); projIT != projectiles_->end(); ++projIT)
+		{
+			if ((*projIT) != NULL && (*projIT)->IsActive())
+			{
+				(*projIT)->Draw();
 			}
 		}
 	}

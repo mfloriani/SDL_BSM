@@ -114,6 +114,7 @@
     <ClInclude Include="NodeTypeEnum.h" />
     <ClInclude Include="Path.h" />
     <ClInclude Include="Pathfinder.h" />
+    <ClInclude Include="Pistol.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="PriorityQueue.h" />
     <ClInclude Include="SDLGame.h" />
@@ -126,6 +127,7 @@
     <ClInclude Include="Vector2D.h" />
     <ClInclude Include="Vector3D.h" />
     <ClInclude Include="Wall.h" />
+    <ClInclude Include="Weapon.h" />
     <ClInclude Include="WorldFunctions.h" />
     <ClInclude Include="WindowsClock.h" />
     <ClInclude Include="World.h" />
