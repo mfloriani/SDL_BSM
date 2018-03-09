@@ -9,5 +9,6 @@ enum MessageType{
 	Msg_BulletHit,
 	Msg_ChaseEnded,
 	Msg_PlayerSpotted,
-	Msg_TargetLost
+	Msg_TargetLost,
+	Msg_PatrolEnded
 };

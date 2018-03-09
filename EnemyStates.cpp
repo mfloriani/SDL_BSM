@@ -27,12 +27,10 @@ void EnemyGlobal::Execute(Enemy* e)
 	//std::cout << "Execute global "<< e->GetId()<< std::endl;
 	if (e->SeeingPlayer())
 	{
-		//Msger->SendMsg(e->GetId(), e->GetId(), 0, MessageType::Msg_PlayerSpotted, NULL);
 		e->SetPlayerAsTarget();
 	}
 	else if(e->HasTarget())
 	{
-		//Msger->SendMsg(e->GetId(), e->GetId(), 0, MessageType::Msg_TargetLost, NULL);
 		e->TargetLost();
 	}
 }
@@ -57,19 +55,9 @@ bool EnemyGlobal::OnMessage(Enemy* e, const Message& msg)
 
 	case Msg_PlayerSpotted:
 		
-		
-
-		/*if(e->IsCloseToAttack())
-			e->GetFSM()->ChangeState(EnemyAttack::GetInstance());
-		else
-			e->GetFSM()->ChangeState(EnemyChase::GetInstance());*/
-
 		break;
 
 	case Msg_TargetLost:
-
-		
-		//e->GetFSM()->ChangeState(EnemyIdle::GetInstance());
 
 		break;
 
@@ -95,7 +83,7 @@ void EnemyIdle::Enter(Enemy* e)
 {
 	std::cout << "Enter idle " << e->GetId() << std::endl;
 
-	Msger->SendMsg(e->GetId(), e->GetId(), 3.0f, MessageType::Msg_Patrol, NULL);
+	Msger->SendMsg(e->GetId(), e->GetId(), 10.0f, MessageType::Msg_Patrol, NULL);
 	
 }
 
@@ -152,7 +140,7 @@ EnemyPatrol* EnemyPatrol::GetInstance()
 void EnemyPatrol::Enter(Enemy* e)
 {
 	std::cout << "Enter Patrol " << e->GetId() << std::endl;
-	//Msger->SendMsg(e->GetId(), e->GetId(), 1.0f, MessageType::Msg_Chase, NULL);
+	e->PreparePatrolRoute();
 }
 
 void EnemyPatrol::Execute(Enemy* e)
@@ -181,8 +169,11 @@ void EnemyPatrol::Exit(Enemy* e)
 bool EnemyPatrol::OnMessage(Enemy* enemy, const Message& msg)
 {
 	switch (msg.Msg)
-	{
-	
+	{	
+	case Msg_PatrolEnded:
+
+		enemy->GetFSM()->ChangeState(EnemyIdle::GetInstance());
+		break;
 
 	default:
 		break;

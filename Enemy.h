@@ -15,6 +15,9 @@ class Enemy;
 class Enemy : public GameObject
 {
 private:
+	typedef std::list<math::Vector2D>	Route;
+
+private:
 	StateMachine<Enemy>*	fsm_;
 	Texture*				sprite_;
 	World*					world_;
@@ -22,14 +25,19 @@ private:
 	Pathfinder*				pathfinder_;
 	GameObject*				target_;
 	math::Vector2D			lastTargetPos_;
-
 	float					rateOfFire_ = 0.5f;
 	float					nextShot_ = 0.0f;
+	int						patrolRouteId_;
+	Route					patrolRoute_;
+	bool					readyToPatrol_;
 
 public:
-	Enemy(World*			world, 
-		  math::Vector2D	pos, 
-		  Texture*			sprite);
+	Enemy(
+		World*			world, 
+		math::Vector2D	pos, 
+		Texture*		sprite,
+		int				route
+	);
 
 	virtual					~Enemy();
 	void					Update(float secs);
@@ -50,5 +58,9 @@ public:
 	void					StopMovement();
 	math::Vector2D			GetLastTargetPos()const { return lastTargetPos_; }
 	void					SetLastTargetPosAsTarget();
+	void					SetPatrolRoute(int route) { patrolRouteId_ = route; }
+	int						GetPatrolRoute()const { return patrolRouteId_; }
+	void					PreparePatrolRoute();
+	bool					HasValidPatrolRoute();
 };
 

@@ -12,13 +12,17 @@
 #include "SDLGame.h"
 #include "Wall.h"
 #include "WorldFunctions.h"
+#include <map>
 
 class Player;
 
 class World
 {
 private:
-	typedef Graph<NavGraphNode<>, NavGraphEdge> NavGraph;
+	typedef Graph<NavGraphNode<>, NavGraphEdge>	NavGraph;
+	typedef std::list<math::Vector2D>			Route;
+	typedef std::map<int, Route>				PatrolRoutes;
+	
 
 private:
 	std::vector<GameObject*>*	gameObjects_;
@@ -36,7 +40,7 @@ private:
 	int							numCellsX_;
 	int							numCellsY_;
 	std::vector<Wall*>			walls_;
-	
+	PatrolRoutes				routes_;
 
 public:
 	World();
@@ -46,7 +50,7 @@ public:
 	bool LoadAssets();
 	bool LoadScene();
 	void SetSpriteSheetClips();
-	void AddNewEnemy(math::Vector2D pos);
+	void AddNewEnemy(math::Vector2D pos, int route);
 	void AddNewPlayer(math::Vector2D pos);
 	void AddNewBullet(int id, math::Vector2D pos, math::Vector2D dir);
 	void HandleInput(SDL_Event* evt);
@@ -65,6 +69,8 @@ public:
 	Tile*const*					GetTiles() const{ return tiles_; }
 	std::vector<GameObject*>*	GetCollidableObjects()const{ return collidableObjects_; }
 	NavGraph&					GetNavGraph()const { return *navGraph_; }
+	Route						GetPatrolRoute(int route) { return routes_[route]; }
+	const std::vector<Wall*>&	GetWalls()const{ return walls_; }
 
 };
 

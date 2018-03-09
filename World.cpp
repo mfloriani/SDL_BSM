@@ -13,8 +13,7 @@ World::World(): cellWidth_(0),
 	enemySprite_ = new Texture();
 	spriteSheet_ = new Texture();
 	player_ = nullptr;
-	navGraph_ = new NavGraph();
-	
+	navGraph_ = new NavGraph();	
 }
 
 World::~World()
@@ -98,6 +97,9 @@ bool World::LoadScene()
 
 	CreateNavGraph();
 
+
+	
+	
 	std::ifstream map("map_01.map");
 
 	if (!map)
@@ -128,7 +130,7 @@ bool World::LoadScene()
 			else if (tileType == TILE_ENEMY)
 			{
 				tileType = TILE_NULL;
-				AddNewEnemy(math::Vector2D(x, y));
+				//AddNewEnemy(math::Vector2D(x, y));
 				
 			}
 
@@ -172,12 +174,25 @@ bool World::LoadScene()
 	walls_.push_back(new Wall(math::Vector2D(440, 248), math::Vector2D(760, 248)));	//bottom 3
 	walls_.push_back(new Wall(math::Vector2D(520, 248), math::Vector2D(520, 184)));	//col 3 bottom
 	
+	/*
+	TEMPORARY ROUTES
+	*/
+	int routeId = 1;
+	Route r;
+	r.push_back(math::Vector2D(168, 88));
+	r.push_back(math::Vector2D(408, 88));
+	r.push_back(math::Vector2D(408, 216));
+	r.push_back(math::Vector2D(168, 216));
+	routes_.insert(std::pair<int, Route>(routeId, r));
+
+	AddNewEnemy(math::Vector2D(168, 88), routeId);
+
 	return true;
 }
 
-void World::AddNewEnemy(math::Vector2D pos)
+void World::AddNewEnemy(math::Vector2D pos, int route)
 {
-	Enemy* en = new Enemy(this, pos, enemySprite_);
+	Enemy* en = new Enemy(this, pos, enemySprite_, route);
 	gameObjects_->push_back(en);
 	GoManager->AddGameObject(en);
 	collidableObjects_->push_back(en);

@@ -221,6 +221,9 @@
     <ClInclude Include="Pistol.h">
       <Filter>GameObjects\Weapons</Filter>
     </ClInclude>
+    <ClInclude Include="Utils.h">
+      <Filter>Misc</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="map_01.map">

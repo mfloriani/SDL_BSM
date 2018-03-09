@@ -1,17 +1,18 @@
 #include "Enemy.h"
 
 
-Enemy::Enemy(World*			world, 
-			 math::Vector2D pos, 
-			 Texture*		sprite) :	GameObject(pos, math::Vector2D(1, 0)),
-										sprite_(sprite),
-										world_(world)
+Enemy::Enemy(
+	World*			world, 
+	math::Vector2D	pos, 
+	Texture*		sprite,
+	int				route
+) :	GameObject(pos, math::Vector2D(1, 0)),
+	sprite_(sprite),
+	world_(world),
+	patrolRouteId_(route)
 {
-	steering_ = new SteeringBehaviors(this);
-	
-	fsm_ = new StateMachine<Enemy>(this);
-	fsm_->SetInitialCurState(EnemyIdle::GetInstance());
-	fsm_->SetGlobalState(EnemyGlobal::GetInstance());
+	steering_ = new SteeringBehaviors(this, world);
+	//steering_->SwitchOnOff(SteeringBehaviors::BehaviorsType::wall_avoidance, true);
 		
 	std::cout << "enemy " << GetId() << std::endl;
 
@@ -19,6 +20,10 @@ Enemy::Enemy(World*			world,
 	maxForce_ = 400.0f;
 
 	pathfinder_ = new Pathfinder(world->GetNavGraph());
+
+	fsm_ = new StateMachine<Enemy>(this);
+	fsm_->SetInitialCurState(EnemyPatrol::GetInstance());
+	fsm_->SetGlobalState(EnemyGlobal::GetInstance());
 }
 
 Enemy::~Enemy()
@@ -185,7 +190,39 @@ void Enemy::ShootAtTarget()
 	}
 }
 
+bool Enemy::HasValidPatrolRoute()
+{
+	if (patrolRouteId_ != NULL) return true;
+
+	return false;
+}
+
 void Enemy::DoPatrolling()
 {
+	if (!HasValidPatrolRoute()) return;
 
+	if(patrolRoute_.size() == 0) 
+		Msger->SendMsg(GetId(), GetId(), 0.0f, MessageType::Msg_PatrolEnded, NULL);
+
+	if (!readyToPatrol_ && steering_->IsPathEnded())
+	{
+		readyToPatrol_ = true;
+		steering_->SetNewPath(patrolRoute_);
+	}
+}
+
+void Enemy::PreparePatrolRoute()
+{
+	if (!HasValidPatrolRoute()) return;
+	
+	patrolRoute_ = world_->GetPatrolRoute(patrolRouteId_);
+	
+	pathfinder_->ChangeSource(position_);
+	pathfinder_->ChangeTarget(patrolRoute_.back());
+	pathfinder_->CreateAStarPath();
+
+	steering_->SetNewPath(pathfinder_->GetPathWaypoints());
+	
+	steering_->SwitchOnOff(SteeringBehaviors::BehaviorsType::follow_path, true);
+	readyToPatrol_ = false;
 }

@@ -26,7 +26,7 @@ public:
 	{
 		if (pathEnded_) return false;
 
-		if (math::distanceSqr(pos, curWaypoint_) < 150) return true;
+		if (math::distanceSqr(pos, curWaypoint_) < 1850) return true;
 
 		return false;
 	}
