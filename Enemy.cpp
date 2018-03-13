@@ -9,15 +9,19 @@ Enemy::Enemy(
 ) :	GameObject(pos, math::Vector2D(1, 0)),
 	sprite_(sprite),
 	world_(world),
-	patrolRouteId_(route)
+	patrolRouteId_(route),
+	rateOfFire_(script->Get<float>("enemy_rateoffire")),
+	nextShot_(0),
+	fov_(script->Get<float>("enemy_fov")),
+	attackDist_(script->Get<float>("enemy_attackdist"))
 {
 	steering_ = new SteeringBehaviors(this, world);
 	//steering_->SwitchOnOff(SteeringBehaviors::BehaviorsType::wall_avoidance, true);
 		
 	std::cout << "enemy " << GetId() << std::endl;
 
-	maxVelocity_ = 50.0f;
-	maxForce_ = 400.0f;
+	maxVelocity_ = script->Get<float>("enemy_maxvelocity");
+	maxForce_ = script->Get<float>("enemy_maxforce");
 
 	pathfinder_ = new Pathfinder(world->GetNavGraph());
 
@@ -145,7 +149,7 @@ void Enemy::ChaseTarget()
 
 bool Enemy::SeeingPlayer()
 {
-	if (world_->HasFOV(GetPosition(), GetDirection(), world_->GetPlayer()->GetPosition(), 135))
+	if (world_->HasFOV(GetPosition(), GetDirection(), world_->GetPlayer()->GetPosition(), fov_))
 	{
 		SetPlayerAsTarget();
 		return true;
@@ -159,7 +163,7 @@ bool Enemy::IsCloseToAttack()
 
 	// std::cout << math::distanceSqr(target_->GetPosition(), GetPosition()) << std::endl;
 
-	if (math::distanceSqr(target_->GetPosition(), GetPosition()) < 300000.0f)
+	if (math::distanceSqr(target_->GetPosition(), GetPosition()) < attackDist_)
 	{
 		//std::cout << "Die MF " << std::endl;
 		return true;

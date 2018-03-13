@@ -4,7 +4,7 @@ void Bullet::Update(float secs)
 {
 	if (!IsActive()) return;	//dont process this gameobject
 
-	position_ += direction_ * 1000.0f * secs;
+	position_ += direction_ * vel_ * secs;
 	//UpdateBoxCollider();
 
 	boxCollider_.x = position_.x;

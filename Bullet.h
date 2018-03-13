@@ -11,6 +11,7 @@ private:
 	int			ownerId_;
 	World*		world_;
 	SDL_Rect	sprite_;
+	float		vel_;
 
 public:
 	Bullet(	
@@ -21,12 +22,13 @@ public:
 	):
 		GameObject(pos, dir),
 		ownerId_(id),
-		world_(world)
+		world_(world),
+		vel_(script->Get<float>("bullet_velocity"))
 	{
 		sprite_.x = pos.x;
 		sprite_.y = pos.y;
-		sprite_.w = 4;
-		sprite_.h = 4;
+		sprite_.w = script->Get<int>("bullet_width");
+		sprite_.h = script->Get<int>("bullet_height");
 	}
 
 	virtual			~Bullet() {}

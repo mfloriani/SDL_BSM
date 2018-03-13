@@ -25,11 +25,13 @@ private:
 	Pathfinder*				pathfinder_;
 	GameObject*				target_;
 	math::Vector2D			lastTargetPos_;
-	float					rateOfFire_ = 0.5f;
-	float					nextShot_ = 0.0f;
+	float					rateOfFire_;
+	float					nextShot_ ;
 	int						patrolRouteId_;
 	Route					patrolRoute_;
 	bool					readyToPatrol_;
+	double					fov_;
+	float					attackDist_;
 
 public:
 	Enemy(

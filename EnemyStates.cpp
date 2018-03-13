@@ -49,7 +49,7 @@ bool EnemyGlobal::OnMessage(Enemy* e, const Message& msg)
 		if (e->GetFSM()->IsInState(*EnemyDying::GetInstance())) return false;
 
 		std::cout << "Enemy " << e->GetId() << " hit " << std::endl;
-		e->TakeDamage(100);
+		e->TakeDamage(script->Get<int>("bullet_damage"));
 		e->GetFSM()->ChangeState(EnemyDying::GetInstance());
 		break;
 

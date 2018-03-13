@@ -11,9 +11,10 @@ private:
 	math::Vector2D	curWaypoint_;
 	int				curStatus_;
 	bool			pathEnded_;
+	float			waypointDist_;
 
 public:
-	Path(WaypointsList& wp) : waypoints_(wp), pathEnded_(false)//, curWaypoint_(math::Vector2D(0,0))
+	Path(WaypointsList& wp) : waypoints_(wp), pathEnded_(false), waypointDist_(script->Get<float>("path_waypointdist"))
 	{ 
 		SetNextWaypoint();
 	}
@@ -26,7 +27,7 @@ public:
 	{
 		if (pathEnded_) return false;
 
-		if (math::distanceSqr(pos, curWaypoint_) < 1850) return true;
+		if (math::distanceSqr(pos, curWaypoint_) < waypointDist_) return true;
 
 		return false;
 	}

@@ -106,7 +106,6 @@
     <ClInclude Include="Geometry.h" />
     <ClInclude Include="Graph.h" />
     <ClInclude Include="GraphEdgeTypes.h" />
-    <ClInclude Include="GraphFunctions.h" />
     <ClInclude Include="GraphNodeTypes.h" />
     <ClInclude Include="LuaScript.h" />
     <ClInclude Include="MathUtil.h" />

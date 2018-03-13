@@ -4,6 +4,7 @@
 #include "Texture.h"
 #include "World.h"
 #include "GameMessages.h"
+#include "LuaScript.h"
 
 class World;
 class GameObject;
@@ -21,8 +22,10 @@ private:
 	bool m_downButtonPressed;
 	bool m_fireButtonPressed;
 
-	float rateOfFire_ = 0.5f;
-	float lastShot_ = 0.0f;
+	float inputForce_;
+
+	float rateOfFire_;
+	float lastShot_;
 
 	virtual math::Vector2D CalcForces();
 	void Player::Rotate();

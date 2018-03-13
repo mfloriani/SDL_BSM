@@ -197,9 +197,6 @@
     <ClInclude Include="Tile.h">
       <Filter>World</Filter>
     </ClInclude>
-    <ClInclude Include="GraphFunctions.h">
-      <Filter>AI\Pathfinding</Filter>
-    </ClInclude>
     <ClInclude Include="PriorityQueue.h">
       <Filter>Misc</Filter>
     </ClInclude>
