@@ -76,11 +76,11 @@ bool World::Initialize()
 
 bool World::LoadAssets()
 {
-	if (!spriteSheet_->LoadFromFile(Game->GetRenderer(), "spriteSheet16x16.png")) return false;
+	if (!spriteSheet_->LoadFromFile(Game->GetRenderer(), script->Get<std::string>("spritesheet"))) return false;
 
-	if (!playerSprite_->LoadFromFile(Game->GetRenderer(), "player1.png")) return false;
+	if (!playerSprite_->LoadFromFile(Game->GetRenderer(), script->Get<std::string>("player1_sprite"))) return false;
 
-	if (!enemySprite_->LoadFromFile(Game->GetRenderer(), "enemy.png")) return false;
+	if (!enemySprite_->LoadFromFile(Game->GetRenderer(), script->Get<std::string>("enemy_sprite"))) return false;
 
 	SetSpriteSheetClips();
 
@@ -97,10 +97,7 @@ bool World::LoadScene()
 
 	CreateNavGraph();
 
-
-	
-	
-	std::ifstream map("map_01.map");
+	std::ifstream map(script->Get<std::string>("map_name"));
 
 	if (!map)
 	{

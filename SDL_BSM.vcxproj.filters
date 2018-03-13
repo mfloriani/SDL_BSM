@@ -40,6 +40,9 @@
     <Filter Include="GameObjects\Weapons">
       <UniqueIdentifier>{7f04e7a2-07de-4a39-82d9-f8967b55d848}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Script">
+      <UniqueIdentifier>{db5212da-e2af-4c64-97e2-c32454062c41}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -101,6 +104,9 @@
     </ClCompile>
     <ClCompile Include="Tile.cpp">
       <Filter>World</Filter>
+    </ClCompile>
+    <ClCompile Include="LuaScript.cpp">
+      <Filter>Script</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -224,10 +230,16 @@
     <ClInclude Include="Utils.h">
       <Filter>Misc</Filter>
     </ClInclude>
+    <ClInclude Include="LuaScript.h">
+      <Filter>Script</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="map_01.map">
       <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Params.lua">
+      <Filter>Script</Filter>
     </None>
   </ItemGroup>
 </Project>

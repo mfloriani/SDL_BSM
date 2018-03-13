@@ -1,6 +1,5 @@
 #include "SDLGame.h"
 
-
 SDLGame* SDLGame::GetInstance()
 {
 	static SDLGame instance;

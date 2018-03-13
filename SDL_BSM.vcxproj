@@ -40,8 +40,8 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>C:\SDL2-2.0.7\include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\SDL2-2.0.7\lib\x86;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\lua-5.3.4_Win32_vc14_lib\include;C:\SDL2-2.0.7\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\lua-5.3.4_Win32_vc14_lib;C:\SDL2-2.0.7\lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -75,6 +75,7 @@
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="EnemyStates.cpp" />
     <ClCompile Include="GameObjectManager.cpp" />
+    <ClCompile Include="LuaScript.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="MathUtil.cpp" />
     <ClCompile Include="Matrix3.cpp" />
@@ -107,6 +108,7 @@
     <ClInclude Include="GraphEdgeTypes.h" />
     <ClInclude Include="GraphFunctions.h" />
     <ClInclude Include="GraphNodeTypes.h" />
+    <ClInclude Include="LuaScript.h" />
     <ClInclude Include="MathUtil.h" />
     <ClInclude Include="Matrix3.h" />
     <ClInclude Include="Message.h" />
@@ -135,6 +137,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="map_01.map" />
+    <None Include="Params.lua" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
