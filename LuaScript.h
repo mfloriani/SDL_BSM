@@ -12,16 +12,47 @@ extern "C" {
 
 #pragma comment(lib, "lua53.lib")
 
-#define script LuaScript::GetInstance()
-
 class LuaScript
 {
-private:
+protected:
 	lua_State *L;
 
-	LuaScript();
-	LuaScript(const LuaScript&);
-	LuaScript& operator=(const LuaScript&);
+	LuaScript()
+	{
+		L = luaL_newstate();
+		if (L) luaL_openlibs(L);
+	}
+
+	LuaScript(std::string filename)
+	{
+		L = luaL_newstate();
+		if (L) luaL_openlibs(L);
+
+		RunScript(filename);
+	}
+
+	bool RunScript(std::string filename)
+	{
+		if (luaL_loadfile(L, filename.c_str()) != LUA_OK)
+		{
+			const char* msg = lua_tostring(L, -1);
+			lua_pop(L, -1);
+			std::cout << "Error: failed to load " << filename << " -> " << msg << std::endl;
+			L = 0;
+			return false;
+		}
+
+		if (lua_pcall(L, 0, LUA_MULTRET, 0) != LUA_OK)
+		{
+			const char* msg = lua_tostring(L, -1);
+			lua_pop(L, -1);
+			std::cout << "Error: failed to call " << filename << " -> " << msg << std::endl;
+			L = 0;
+			return false;
+		}
+
+		return true;
+	}
 
 	// Generic get
 	template<typename T>
@@ -36,12 +67,9 @@ private:
 		return 0;
 	}
 
-
-
 public:
 	virtual ~LuaScript() { if (L) lua_close(L); }
-	static LuaScript* GetInstance();
-
+	
 	template<typename T>
 	T Get(const std::string& variableName) 
 	{
@@ -67,7 +95,8 @@ public:
 		return result;
 	}
 
-	
+
+
 
 };
 

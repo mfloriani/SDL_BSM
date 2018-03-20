@@ -4,7 +4,7 @@
 #include "Texture.h"
 #include "World.h"
 #include "GameMessages.h"
-#include "LuaScript.h"
+#include "LuaParameters.h"
 
 class World;
 class GameObject;

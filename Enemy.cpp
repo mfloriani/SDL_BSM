@@ -10,18 +10,18 @@ Enemy::Enemy(
 	sprite_(sprite),
 	world_(world),
 	patrolRouteId_(route),
-	rateOfFire_(script->Get<float>("enemy_rateoffire")),
+	rateOfFire_(params->Get<float>("enemy_rateoffire")),
 	nextShot_(0),
-	fov_(script->Get<float>("enemy_fov")),
-	attackDist_(script->Get<float>("enemy_attackdist"))
+	fov_(params->Get<float>("enemy_fov")),
+	attackDist_(params->Get<float>("enemy_attackdist"))
 {
 	steering_ = new SteeringBehaviors(this, world);
 	//steering_->SwitchOnOff(SteeringBehaviors::BehaviorsType::wall_avoidance, true);
 		
 	std::cout << "enemy " << GetId() << std::endl;
 
-	maxVelocity_ = script->Get<float>("enemy_maxvelocity");
-	maxForce_ = script->Get<float>("enemy_maxforce");
+	maxVelocity_ = params->Get<float>("enemy_maxvelocity");
+	maxForce_ = params->Get<float>("enemy_maxforce");
 
 	pathfinder_ = new Pathfinder(world->GetNavGraph());
 
@@ -219,7 +219,7 @@ void Enemy::PreparePatrolRoute()
 {
 	if (!HasValidPatrolRoute()) return;
 	
-	patrolRoute_ = world_->GetPatrolRoute(patrolRouteId_);
+	patrolRoute_ = world_->GetPatrolRoute(patrolRouteId_).waypoints_;
 	
 	pathfinder_->ChangeSource(position_);
 	pathfinder_->ChangeTarget(patrolRoute_.back());

@@ -14,7 +14,7 @@ private:
 	float			waypointDist_;
 
 public:
-	Path(WaypointsList& wp) : waypoints_(wp), pathEnded_(false), waypointDist_(script->Get<float>("path_waypointdist"))
+	Path(WaypointsList& wp) : waypoints_(wp), pathEnded_(false), waypointDist_(params->Get<float>("path_waypointdist"))
 	{ 
 		SetNextWaypoint();
 	}

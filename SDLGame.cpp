@@ -42,7 +42,7 @@ bool SDLGame::Initialize()
 		return false;
 	}
 
-	font_ = TTF_OpenFont(script->Get<std::string>("font_name").c_str(), 18);
+	font_ = TTF_OpenFont(params->Get<std::string>("font_name").c_str(), 18);
 	if (font_ == NULL)
 	{
 		printf("Failed to load font! SDL_ttf Error: %s\n", TTF_GetError());

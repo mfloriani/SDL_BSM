@@ -1,6 +1,6 @@
 #pragma once
 #include <math.h>
-#include "LuaScript.h"
+#include "LuaParameters.h"
 
 struct Message
 {
@@ -26,7 +26,7 @@ struct Message
 								ExtraInfo(info){}
 };
 
-const double SmallestDelay = script->Get<float>("smallest_delay");
+const double SmallestDelay = params->Get<float>("smallest_delay");
 
 //prevent sending the same msg more than once in a short amount of time
 inline bool operator==(const Message& m1, const Message& m2)

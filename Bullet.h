@@ -23,12 +23,12 @@ public:
 		GameObject(pos, dir),
 		ownerId_(id),
 		world_(world),
-		vel_(script->Get<float>("bullet_velocity"))
+		vel_(params->Get<float>("bullet_velocity"))
 	{
 		sprite_.x = pos.x;
 		sprite_.y = pos.y;
-		sprite_.w = script->Get<int>("bullet_width");
-		sprite_.h = script->Get<int>("bullet_height");
+		sprite_.w = params->Get<int>("bullet_width");
+		sprite_.h = params->Get<int>("bullet_height");
 	}
 
 	virtual			~Bullet() {}

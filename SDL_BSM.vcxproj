@@ -75,7 +75,8 @@
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="EnemyStates.cpp" />
     <ClCompile Include="GameObjectManager.cpp" />
-    <ClCompile Include="LuaScript.cpp" />
+    <ClCompile Include="LuaParameters.cpp" />
+    <ClCompile Include="LuaTiledImporter.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="MathUtil.cpp" />
     <ClCompile Include="Matrix3.cpp" />
@@ -107,7 +108,10 @@
     <ClInclude Include="Graph.h" />
     <ClInclude Include="GraphEdgeTypes.h" />
     <ClInclude Include="GraphNodeTypes.h" />
+    <ClInclude Include="LuaCFunctions.h" />
+    <ClInclude Include="LuaParameters.h" />
     <ClInclude Include="LuaScript.h" />
+    <ClInclude Include="LuaTiledImporter.h" />
     <ClInclude Include="MathUtil.h" />
     <ClInclude Include="Matrix3.h" />
     <ClInclude Include="Message.h" />
@@ -118,6 +122,7 @@
     <ClInclude Include="Pistol.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="PriorityQueue.h" />
+    <ClInclude Include="PatrolRoute.h" />
     <ClInclude Include="SDLGame.h" />
     <ClInclude Include="State.h" />
     <ClInclude Include="StateMachine.h" />

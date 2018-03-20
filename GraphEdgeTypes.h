@@ -1,6 +1,6 @@
 #pragma once
 #include "NodeTypeEnum.h"
-#include "LuaScript.h"
+#include "LuaParameters.h"
 
 class GraphEdge
 {
@@ -10,8 +10,8 @@ protected:
 	double	cost_;
 
 public:
-	GraphEdge(): from_(invalid_node_index), to_(invalid_node_index), cost_(script->Get<float>("edge_defaultcost")){}
-	GraphEdge(int from, int to) : from_(from), to_(to), cost_(script->Get<float>("edge_defaultcost")) {}
+	GraphEdge(): from_(invalid_node_index), to_(invalid_node_index), cost_(params->Get<float>("edge_defaultcost")){}
+	GraphEdge(int from, int to) : from_(from), to_(to), cost_(params->Get<float>("edge_defaultcost")) {}
 	GraphEdge(int from, int to, double cost) : from_(from), to_(to), cost_(cost) {}
 
 	virtual ~GraphEdge(){}

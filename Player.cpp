@@ -10,9 +10,9 @@ Player::Player(
 	sprite_(sprite),
 	aim_(math::Vector2D(0,0)),
 	world_(world),
-	rateOfFire_(script->Get<float>("player_rateoffire")),
+	rateOfFire_(params->Get<float>("player_rateoffire")),
 	lastShot_(0),
-	inputForce_(script->Get<float>("plyer_inputforce"))
+	inputForce_(params->Get<float>("plyer_inputforce"))
 {
 }
 

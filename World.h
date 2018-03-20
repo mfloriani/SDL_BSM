@@ -13,6 +13,8 @@
 #include "Wall.h"
 #include "WorldFunctions.h"
 #include <map>
+#include "LuaTiledImporter.h"
+#include "PatrolRoute.h"
 
 class Player;
 
@@ -20,9 +22,6 @@ class World
 {
 private:
 	typedef Graph<NavGraphNode<>, NavGraphEdge>	NavGraph;
-	typedef std::list<math::Vector2D>			Route;
-	typedef std::map<int, Route>				PatrolRoutes;
-	
 
 private:
 	std::vector<GameObject*>*	gameObjects_;
@@ -48,7 +47,7 @@ public:
 
 	bool Initialize();
 	bool LoadAssets();
-	bool LoadScene();
+	bool LoadTiledScene();
 	void SetSpriteSheetClips();
 	void AddNewEnemy(math::Vector2D pos, int route);
 	void AddNewPlayer(math::Vector2D pos);
@@ -69,7 +68,7 @@ public:
 	Tile*const*					GetTiles() const{ return tiles_; }
 	std::vector<GameObject*>*	GetCollidableObjects()const{ return collidableObjects_; }
 	NavGraph&					GetNavGraph()const { return *navGraph_; }
-	Route						GetPatrolRoute(int route) { return routes_[route]; }
+	Route						GetPatrolRoute(int route) { return routes_.patrolRoutes_[route]; }
 	const std::vector<Wall*>&	GetWalls()const{ return walls_; }
 
 };
