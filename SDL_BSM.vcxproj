@@ -40,8 +40,8 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>C:\SDL2-2.0.7\include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\SDL2-2.0.7\lib\x86;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\lua-5.3.4_Win32_vc14_lib\include;C:\SDL2-2.0.7\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\lua-5.3.4_Win32_vc14_lib;C:\SDL2-2.0.7\lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -75,6 +75,8 @@
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="EnemyStates.cpp" />
     <ClCompile Include="GameObjectManager.cpp" />
+    <ClCompile Include="LuaParameters.cpp" />
+    <ClCompile Include="LuaTiledImporter.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="MathUtil.cpp" />
     <ClCompile Include="Matrix3.cpp" />
@@ -105,8 +107,11 @@
     <ClInclude Include="Geometry.h" />
     <ClInclude Include="Graph.h" />
     <ClInclude Include="GraphEdgeTypes.h" />
-    <ClInclude Include="GraphFunctions.h" />
     <ClInclude Include="GraphNodeTypes.h" />
+    <ClInclude Include="LuaCFunctions.h" />
+    <ClInclude Include="LuaParameters.h" />
+    <ClInclude Include="LuaScript.h" />
+    <ClInclude Include="LuaTiledImporter.h" />
     <ClInclude Include="MathUtil.h" />
     <ClInclude Include="Matrix3.h" />
     <ClInclude Include="Message.h" />
@@ -117,6 +122,7 @@
     <ClInclude Include="Pistol.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="PriorityQueue.h" />
+    <ClInclude Include="PatrolRoute.h" />
     <ClInclude Include="SDLGame.h" />
     <ClInclude Include="State.h" />
     <ClInclude Include="StateMachine.h" />
@@ -124,6 +130,7 @@
     <ClInclude Include="Texture.h" />
     <ClInclude Include="Tile.h" />
     <ClInclude Include="Timer.h" />
+    <ClInclude Include="Utils.h" />
     <ClInclude Include="Vector2D.h" />
     <ClInclude Include="Vector3D.h" />
     <ClInclude Include="Wall.h" />
@@ -134,6 +141,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="map_01.map" />
+    <None Include="Params.lua" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

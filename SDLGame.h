@@ -7,6 +7,8 @@
 #include <SDL_mixer.h>
 #include <string>
 #include "Timer.h"
+#include "LuaParameters.h"
+
 
 #define Game SDLGame::GetInstance()
 

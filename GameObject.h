@@ -5,6 +5,7 @@
 #include "Vector2D.h"
 #include "Message.h"
 #include "Config.h"
+#include "LuaParameters.h"
 
 class GameObject
 {
@@ -38,12 +39,12 @@ protected:
 		type_(0), 
 		active_(true), 
 		tag_(""), 
-		mass_(1.0f),
+		mass_(params->Get<float>("default_mass")),
 		radianAngle_(0.0f),
 		degreeAngle_(0.0f),
 		velocity_(math::Vector2D(0,0)),
-		maxForce_(2.0f),
-		maxVelocity_(150.0f),
+		maxForce_(params->Get<float>("default_maxforce")),
+		maxVelocity_(params->Get<float>("default_maxvelocity")),
 		direction_(dir)
 	{
 		UpdateBoxCollider();

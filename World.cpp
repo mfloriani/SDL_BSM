@@ -13,8 +13,7 @@ World::World(): cellWidth_(0),
 	enemySprite_ = new Texture();
 	spriteSheet_ = new Texture();
 	player_ = nullptr;
-	navGraph_ = new NavGraph();
-	
+	navGraph_ = new NavGraph();	
 }
 
 World::~World()
@@ -69,83 +68,60 @@ World::~World()
 bool World::Initialize()
 {
 	if (!LoadAssets()) return false;
-		
-	if (!LoadScene()) return false;
 	
+	if(!LoadTiledScene()) return false;
+
 	return true;
 }
 
 bool World::LoadAssets()
 {
-	if (!spriteSheet_->LoadFromFile(Game->GetRenderer(), "spriteSheet16x16.png")) return false;
+	if (!spriteSheet_->LoadFromFile(Game->GetRenderer(), params->Get<std::string>("spritesheet"))) return false;
 
-	if (!playerSprite_->LoadFromFile(Game->GetRenderer(), "player1.png")) return false;
+	if (!playerSprite_->LoadFromFile(Game->GetRenderer(), params->Get<std::string>("player1_sprite"))) return false;
 
-	if (!enemySprite_->LoadFromFile(Game->GetRenderer(), "enemy.png")) return false;
+	if (!enemySprite_->LoadFromFile(Game->GetRenderer(), params->Get<std::string>("enemy_sprite"))) return false;
 
 	SetSpriteSheetClips();
 
 	return true;
 }
 
-
-
-bool World::LoadScene()
+bool World::LoadTiledScene()
 {
+	std::vector<TiledEnemy>		enemies;
+	std::vector<TiledPlayer>	players;
+	std::vector<int>			tiles;
+
+	tiled->LoadMap(
+		"tiled-importer.lua", 
+		walls_,
+		routes_,
+		enemies,
+		players,
+		tiles
+	);
+
+	CreateNavGraph();
+
 	int x = 0;
 	int y = 0;
 	int id = 0;
 
-	CreateNavGraph();
-
-	std::ifstream map("map_01.map");
-
-	if (!map)
+	for (int t = 0; t < tiles.size(); t++)
 	{
-		printf("Failed to load map file!\n");
-		return false;
-	}
+		int tileType = tiles[t];
 
-	for (int t = 0; t < TILES_MAP_COUNT; t++)
-	{
-		int tileType = -1;
-		map >> tileType;
-
-		if (map.fail())
+		if (tileType == TILE_NULL || tileType == TILE_EMPTY || tileType == TILE_WALL || tileType == TILE_ENEMY || tileType == TILE_PLAYER1 || tileType == TILE_PLAYER2)
 		{
-			printf("Failed to load map!\n");
-			return false;
-		}
-
-		if (tileType == TILE_NULL || tileType == TILE_WALL || tileType == TILE_ENEMY || tileType == TILE_PLAYER1 || tileType == TILE_PLAYER2)
-		{
-			if (tileType == TILE_PLAYER1)
-			{
-				tileType = TILE_NULL;
-				AddNewPlayer(math::Vector2D(x, y));
-				
-			}
-			else if (tileType == TILE_ENEMY)
-			{
-				tileType = TILE_NULL;
-				AddNewEnemy(math::Vector2D(x, y));
-				
-			}
-
 			bool isCollidable = false;
 			if (tileType == TILE_WALL)
 			{
 				isCollidable = true;
-				UpdateNavGraph(t,false);
+				UpdateNavGraph(t, false);
 			}
 
 			tiles_[t] = new Tile(new SDL_Rect{ x, y, TILE_WIDTH, TILE_HEIGHT }, tileType, id++, spriteSheet_, clips_[tileType], isCollidable);
-		}
-		else
-		{
-			printf("Failed to load fileType! [%s]\n", tileType);
-			map.close();
-			return false;
 		}
 
 		x += TILE_WIDTH;
@@ -156,28 +132,23 @@ bool World::LoadScene()
 		}
 	}
 
-	map.close();
-	
-	//setting the walls manually for now
-	walls_.push_back(new Wall(math::Vector2D(40, 40), math::Vector2D(760, 40)));	//top
-	walls_.push_back(new Wall(math::Vector2D(40, 40), math::Vector2D(40, 248)));	//left
-	walls_.push_back(new Wall(math::Vector2D(120, 40), math::Vector2D(120, 136)));	//col 1 top
-	walls_.push_back(new Wall(math::Vector2D(440, 40), math::Vector2D(440, 104)));	//col 2 top
-	walls_.push_back(new Wall(math::Vector2D(520, 40), math::Vector2D(520, 104)));	//col 3 top
-	walls_.push_back(new Wall(math::Vector2D(760, 40), math::Vector2D(760, 248)));	//right
-	walls_.push_back(new Wall(math::Vector2D(40, 248), math::Vector2D(184, 248)));	//bottom 1
-	walls_.push_back(new Wall(math::Vector2D(120, 248), math::Vector2D(120, 200)));	//col 1 bottom
-	walls_.push_back(new Wall(math::Vector2D(264, 248), math::Vector2D(360, 248)));	//bottom 2
-	walls_.push_back(new Wall(math::Vector2D(440, 248), math::Vector2D(440, 184)));	//col 2 bottom
-	walls_.push_back(new Wall(math::Vector2D(440, 248), math::Vector2D(760, 248)));	//bottom 3
-	walls_.push_back(new Wall(math::Vector2D(520, 248), math::Vector2D(520, 184)));	//col 3 bottom
-	
+	for (TiledEnemy e : enemies)
+	{
+		AddNewEnemy(math::Vector2D(e.x, e.y), e.route);
+	}
+
+	for (TiledPlayer p : players)
+	{
+		AddNewPlayer(math::Vector2D(p.x, p.y));
+	}
+
 	return true;
 }
 
-void World::AddNewEnemy(math::Vector2D pos)
+
+void World::AddNewEnemy(math::Vector2D pos, int route)
 {
-	Enemy* en = new Enemy(this, pos, enemySprite_);
+	Enemy* en = new Enemy(this, pos, enemySprite_, route);
 	gameObjects_->push_back(en);
 	GoManager->AddGameObject(en);
 	collidableObjects_->push_back(en);
@@ -300,7 +271,8 @@ void World::Draw()
 void World::SetSpriteSheetClips()
 {
 	clips_[TILE_NULL] = new SDL_Rect{ 0, 0, TILE_WIDTH, TILE_HEIGHT };
-	clips_[TILE_WALL] = new SDL_Rect{ TILE_WIDTH, 0, TILE_WIDTH, TILE_HEIGHT };
+	clips_[TILE_EMPTY] = new SDL_Rect{ 0, 0, TILE_WIDTH, TILE_HEIGHT };
+	clips_[TILE_WALL] = new SDL_Rect{ TILE_WIDTH , 0, TILE_WIDTH, TILE_HEIGHT };
 	clips_[TILE_ENEMY] = new SDL_Rect{ TILE_WIDTH * 2, 0, TILE_WIDTH, TILE_HEIGHT };
 	clips_[TILE_PLAYER1] = new SDL_Rect{ TILE_WIDTH * 3, 0, TILE_WIDTH, TILE_HEIGHT };
 	clips_[TILE_PLAYER2] = new SDL_Rect{ TILE_WIDTH * 4, 0, TILE_WIDTH, TILE_HEIGHT };

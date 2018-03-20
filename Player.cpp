@@ -9,7 +9,10 @@ Player::Player(
 	GameObject(pos, math::Vector2D(1, 0)),
 	sprite_(sprite),
 	aim_(math::Vector2D(0,0)),
-	world_(world)
+	world_(world),
+	rateOfFire_(params->Get<float>("player_rateoffire")),
+	lastShot_(0),
+	inputForce_(params->Get<float>("plyer_inputforce"))
 {
 }
 
@@ -86,20 +89,19 @@ void Player::HandleInput(SDL_Event *ev)
 }
 
 math::Vector2D Player::CalcForces()
-{
-	int speed = 600;
+{	
 	math::Vector2D forces;
 	if (m_rightButtonPressed)
-		forces += math::Vector2D(speed, 0);
+		forces += math::Vector2D(inputForce_, 0);
 
 	if (m_leftButtonPressed)
-		forces += math::Vector2D(-speed, 0);
+		forces += math::Vector2D(-inputForce_, 0);
 
 	if (m_upButtonPressed)
-		forces += math::Vector2D(0, -speed);
+		forces += math::Vector2D(0, -inputForce_);
 
 	if (m_downButtonPressed)
-		forces += math::Vector2D(0, speed);
+		forces += math::Vector2D(0, inputForce_);
 
 	if (forces.isZero()) velocity_ = math::Vector2D(0, 0); //stop the movement when player is not pressing movement button
 

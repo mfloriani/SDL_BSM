@@ -1,24 +1,33 @@
 #include "Enemy.h"
 
 
-Enemy::Enemy(World*			world, 
-			 math::Vector2D pos, 
-			 Texture*		sprite) :	GameObject(pos, math::Vector2D(1, 0)),
-										sprite_(sprite),
-										world_(world)
+Enemy::Enemy(
+	World*			world, 
+	math::Vector2D	pos, 
+	Texture*		sprite,
+	int				route
+) :	GameObject(pos, math::Vector2D(1, 0)),
+	sprite_(sprite),
+	world_(world),
+	patrolRouteId_(route),
+	rateOfFire_(params->Get<float>("enemy_rateoffire")),
+	nextShot_(0),
+	fov_(params->Get<float>("enemy_fov")),
+	attackDist_(params->Get<float>("enemy_attackdist"))
 {
-	steering_ = new SteeringBehaviors(this);
-	
-	fsm_ = new StateMachine<Enemy>(this);
-	fsm_->SetInitialCurState(EnemyIdle::GetInstance());
-	fsm_->SetGlobalState(EnemyGlobal::GetInstance());
+	steering_ = new SteeringBehaviors(this, world);
+	//steering_->SwitchOnOff(SteeringBehaviors::BehaviorsType::wall_avoidance, true);
 		
 	std::cout << "enemy " << GetId() << std::endl;
 
-	maxVelocity_ = 50.0f;
-	maxForce_ = 400.0f;
+	maxVelocity_ = params->Get<float>("enemy_maxvelocity");
+	maxForce_ = params->Get<float>("enemy_maxforce");
 
 	pathfinder_ = new Pathfinder(world->GetNavGraph());
+
+	fsm_ = new StateMachine<Enemy>(this);
+	fsm_->SetInitialCurState(EnemyPatrol::GetInstance());
+	fsm_->SetGlobalState(EnemyGlobal::GetInstance());
 }
 
 Enemy::~Enemy()
@@ -140,7 +149,7 @@ void Enemy::ChaseTarget()
 
 bool Enemy::SeeingPlayer()
 {
-	if (world_->HasFOV(GetPosition(), GetDirection(), world_->GetPlayer()->GetPosition(), 135))
+	if (world_->HasFOV(GetPosition(), GetDirection(), world_->GetPlayer()->GetPosition(), fov_))
 	{
 		SetPlayerAsTarget();
 		return true;
@@ -154,7 +163,7 @@ bool Enemy::IsCloseToAttack()
 
 	// std::cout << math::distanceSqr(target_->GetPosition(), GetPosition()) << std::endl;
 
-	if (math::distanceSqr(target_->GetPosition(), GetPosition()) < 300000.0f)
+	if (math::distanceSqr(target_->GetPosition(), GetPosition()) < attackDist_)
 	{
 		//std::cout << "Die MF " << std::endl;
 		return true;
@@ -185,7 +194,39 @@ void Enemy::ShootAtTarget()
 	}
 }
 
+bool Enemy::HasValidPatrolRoute()
+{
+	if (patrolRouteId_ != NULL) return true;
+
+	return false;
+}
+
 void Enemy::DoPatrolling()
 {
+	if (!HasValidPatrolRoute()) return;
 
+	if(patrolRoute_.size() == 0) 
+		Msger->SendMsg(GetId(), GetId(), 0.0f, MessageType::Msg_PatrolEnded, NULL);
+
+	if (!readyToPatrol_ && steering_->IsPathEnded())
+	{
+		readyToPatrol_ = true;
+		steering_->SetNewPath(patrolRoute_);
+	}
+}
+
+void Enemy::PreparePatrolRoute()
+{
+	if (!HasValidPatrolRoute()) return;
+	
+	patrolRoute_ = world_->GetPatrolRoute(patrolRouteId_).waypoints_;
+	
+	pathfinder_->ChangeSource(position_);
+	pathfinder_->ChangeTarget(patrolRoute_.back());
+	pathfinder_->CreateAStarPath();
+
+	steering_->SetNewPath(pathfinder_->GetPathWaypoints());
+	
+	steering_->SwitchOnOff(SteeringBehaviors::BehaviorsType::follow_path, true);
+	readyToPatrol_ = false;
 }

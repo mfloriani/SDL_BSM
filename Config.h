@@ -9,9 +9,10 @@
 #define TILES_MAP_COUNT		1850	//TILES_MAP_X	* TILES_MAP_Y
 #define TILES_SPRITESHEET	10
 #define TILE_NULL			0
-#define TILE_WALL			1
-#define TILE_ENEMY			2
-#define TILE_PLAYER1		3
-#define TILE_PLAYER2		4
+#define TILE_EMPTY			1
+#define TILE_WALL			2
+#define TILE_ENEMY			3
+#define TILE_PLAYER1		4
+#define TILE_PLAYER2		5
 #define SPRITE_WIDTH		16
 #define SPRITE_HEIGHT		16
