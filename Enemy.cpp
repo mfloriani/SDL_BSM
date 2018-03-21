@@ -57,8 +57,7 @@ void Enemy::Update(float secs)
 
 	UpdateBoxCollider();
 
-	//if(velocity_.size() > 0.00001f)	
-		RotateTo(velocity_);
+	RotateTo(velocity_);
 }
 
 void Enemy::Draw()
@@ -67,20 +66,24 @@ void Enemy::Draw()
 	
 	sprite_->Render(position_.x, position_.y, NULL, degreeAngle_, NULL, SDL_FLIP_NONE);
 
-	pathfinder_->Draw(Game->GetRenderer());
+	if (world_->IsDebugOn())
+	{
+		pathfinder_->Draw(Game->GetRenderer());
 
-	math::Vector2D pos = GetPosition();
-	pos.x += TILE_WIDTH / 2;
-	pos.y += TILE_HEIGHT / 2;
-	math::Vector2D dirOffset = pos + (GetDirection() * 50);
+		math::Vector2D pos = GetPosition();
+		pos.x += TILE_WIDTH / 2;
+		pos.y += TILE_HEIGHT / 2;
+		math::Vector2D dirOffset = pos + (GetDirection() * 50);
 
-	SDL_RenderDrawLine(Game->GetRenderer(), pos.x, pos.y, dirOffset.x, dirOffset.y);
+		SDL_RenderDrawLine(Game->GetRenderer(), pos.x, pos.y, dirOffset.x, dirOffset.y);
+
+		math::Vector2D perp = math::perp(GetDirection());
+		math::Vector2D perpOffSet1 = pos + (perp * 100);
+		math::Vector2D perpOffSet2 = pos - (perp * 100);
+
+		SDL_RenderDrawLine(Game->GetRenderer(), perpOffSet2.x, perpOffSet2.y, perpOffSet1.x, perpOffSet1.y);
+	}
 	
-	math::Vector2D perp = math::perp(GetDirection());
-	math::Vector2D perpOffSet1 = pos + (perp * 100);
-	math::Vector2D perpOffSet2 = pos - (perp * 100);
-
-	SDL_RenderDrawLine(Game->GetRenderer(), perpOffSet2.x, perpOffSet2.y, perpOffSet1.x, perpOffSet1.y);
 }
 
 void Enemy::TakeDamage(int damage)

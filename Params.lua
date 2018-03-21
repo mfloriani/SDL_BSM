@@ -6,6 +6,11 @@ enemy_sprite	= "enemy.png"
 map_name		= "map_01.map"
 font_name		= "arial.ttf"
 
+--------
+--Tiled
+tiled_firstmap	= "tiled-importer.lua"
+
+
 -----------
 --Messaging
 

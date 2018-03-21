@@ -2,8 +2,6 @@
 
 void Pathfinder::Draw(SDL_Renderer* r)
 {
-	//graph_->Draw(renderer);
-	
 	if (path_.size() == 0) return;
 
 	SDL_SetRenderDrawColor(r, 0xFF, 0x00, 0x00, 0xFF);

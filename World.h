@@ -40,6 +40,8 @@ private:
 	int							numCellsY_;
 	std::vector<Wall*>			walls_;
 	PatrolRoutes				routes_;
+	bool						debugOn_;
+	bool						debugGraphOn_;
 
 public:
 	World();
@@ -70,6 +72,6 @@ public:
 	NavGraph&					GetNavGraph()const { return *navGraph_; }
 	Route						GetPatrolRoute(int route) { return routes_.patrolRoutes_[route]; }
 	const std::vector<Wall*>&	GetWalls()const{ return walls_; }
-
+	bool						IsDebugOn()const { return debugOn_; }
 };
 

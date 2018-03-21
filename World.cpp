@@ -94,7 +94,7 @@ bool World::LoadTiledScene()
 	std::vector<int>			tiles;
 
 	tiled->LoadMap(
-		"tiled-importer.lua", 
+		params->Get<std::string>("tiled_firstmap"),
 		walls_,
 		routes_,
 		enemies,
@@ -173,13 +173,11 @@ void World::HandleInput(SDL_Event* evt)
 	{
 		switch (evt->key.keysym.sym)
 		{
-		case SDLK_RETURN:
-			
-			
-
+		case SDLK_F1:
+			debugOn_ = !debugOn_;
 			break;
-		case SDLK_SPACE:
-
+		case SDLK_F2:
+			debugGraphOn_ = !debugGraphOn_;
 			break;
 		}
 	}
@@ -224,22 +222,25 @@ void World::Draw()
 		tiles_[t]->Draw();
 	}
 
-	std::vector<Wall*>::const_iterator itWall;
-	if (walls_.size() > 0)
+	if (IsDebugOn())
 	{
-		for (itWall = walls_.begin(); itWall != walls_.end(); ++itWall)
+		std::vector<Wall*>::const_iterator itWall;
+		if (walls_.size() > 0)
 		{
-			SDL_SetRenderDrawColor(Game->GetRenderer(), 0, 0, 255, SDL_ALPHA_OPAQUE);
-			SDL_RenderDrawLine(
-				Game->GetRenderer(), 
-				(*itWall)->GetFrom().x, 
-				(*itWall)->GetFrom().y, 
-				(*itWall)->GetTo().x,
-				(*itWall)->GetTo().y
-			);
+			for (itWall = walls_.begin(); itWall != walls_.end(); ++itWall)
+			{
+				SDL_SetRenderDrawColor(Game->GetRenderer(), 0, 0, 255, SDL_ALPHA_OPAQUE);
+				SDL_RenderDrawLine(
+					Game->GetRenderer(),
+					(*itWall)->GetFrom().x,
+					(*itWall)->GetFrom().y,
+					(*itWall)->GetTo().x,
+					(*itWall)->GetTo().y
+				);
+			}
 		}
+		if(debugGraphOn_) navGraph_->Draw(Game->GetRenderer());
 	}
-	//pathfinder_->Draw(Game->GetRenderer());
 
 	player_->Draw();
 
