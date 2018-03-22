@@ -13,8 +13,18 @@ Enemy::Enemy(
 	rateOfFire_(params->Get<float>("enemy_rateoffire")),
 	nextShot_(0),
 	fov_(params->Get<float>("enemy_fov")),
-	attackDist_(params->Get<float>("enemy_attackdist"))
+	attackDist_(params->Get<float>("enemy_attackdist"))	
 {
+	spriteW_ = sprite->GetWidth();
+	spriteH_ = sprite->GetHeight();
+
+	gunPos_ = math::Vector2D(spriteW_ / 2, spriteH_ / 2);
+
+	boxCollider_.x = position_.x;
+	boxCollider_.y = position_.y;
+	boxCollider_.w = spriteW_;
+	boxCollider_.h = spriteH_;
+
 	steering_ = new SteeringBehaviors(this, world);
 	//steering_->SwitchOnOff(SteeringBehaviors::BehaviorsType::wall_avoidance, true);
 		
@@ -55,9 +65,11 @@ void Enemy::Update(float secs)
 
 	position_ += velocity_ * secs;
 
-	UpdateBoxCollider();
-
 	RotateTo(velocity_);
+		
+	boxCollider_.x = position_.x;
+	boxCollider_.y = position_.y;
+
 }
 
 void Enemy::Draw()
@@ -71,8 +83,8 @@ void Enemy::Draw()
 		pathfinder_->Draw(Game->GetRenderer());
 
 		math::Vector2D pos = GetPosition();
-		pos.x += TILE_WIDTH / 2;
-		pos.y += TILE_HEIGHT / 2;
+		pos.x += spriteW_ / 2;
+		pos.y += spriteH_ / 2;
 		math::Vector2D dirOffset = pos + (GetDirection() * 50);
 
 		SDL_RenderDrawLine(Game->GetRenderer(), pos.x, pos.y, dirOffset.x, dirOffset.y);
@@ -82,6 +94,8 @@ void Enemy::Draw()
 		math::Vector2D perpOffSet2 = pos - (perp * 100);
 
 		SDL_RenderDrawLine(Game->GetRenderer(), perpOffSet2.x, perpOffSet2.y, perpOffSet1.x, perpOffSet1.y);
+
+		SDL_RenderDrawRect(Game->GetRenderer(), &boxCollider_);
 	}
 	
 }
@@ -151,7 +165,14 @@ void Enemy::ChaseTarget()
 }
 
 bool Enemy::SeeingPlayer()
-{
+{	
+	if (!world_->GetPlayer()->IsActive())
+	{
+		TargetLost();
+		return false;
+	}
+		
+
 	if (world_->HasFOV(GetPosition(), GetDirection(), world_->GetPlayer()->GetPosition(), fov_))
 	{
 		SetPlayerAsTarget();
@@ -193,7 +214,7 @@ void Enemy::ShootAtTarget()
 	{
 		nextShot_ = WinClock->GetCurTime() + (1 / rateOfFire_);
 		//std::cout << "Die MF " << std::endl;
-		world_->AddNewBullet(GetId(), position_, direction_);
+		world_->AddNewBullet(GetId(), (position_ + gunPos_), direction_);
 	}
 }
 
@@ -232,4 +253,10 @@ void Enemy::PreparePatrolRoute()
 	
 	steering_->SwitchOnOff(SteeringBehaviors::BehaviorsType::follow_path, true);
 	readyToPatrol_ = false;
+}
+
+void Enemy::Die()
+{
+	SetActive(false);
+	world_->RemoveEnemy();
 }

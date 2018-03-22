@@ -32,6 +32,9 @@ private:
 	bool					readyToPatrol_;
 	double					fov_;
 	float					attackDist_;
+	int						spriteW_;
+	int						spriteH_;
+	math::Vector2D			gunPos_;
 
 public:
 	Enemy(
@@ -64,5 +67,6 @@ public:
 	int						GetPatrolRoute()const { return patrolRouteId_; }
 	void					PreparePatrolRoute();
 	bool					HasValidPatrolRoute();
+	void					Die();
 };
 

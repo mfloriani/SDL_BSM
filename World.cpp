@@ -13,7 +13,9 @@ World::World(): cellWidth_(0),
 	enemySprite_ = new Texture();
 	spriteSheet_ = new Texture();
 	player_ = nullptr;
-	navGraph_ = new NavGraph();	
+	navGraph_ = new NavGraph();
+	missionSuccessTex_ = new Texture();
+	missionFailureTex_ = new Texture();
 }
 
 World::~World()
@@ -24,9 +26,15 @@ World::~World()
 	playerSprite_->Free();
 	enemySprite_->Free();
 	spriteSheet_->Free();
+	missionSuccessTex_->Free();
+	missionFailureTex_->Free();
+
+	Mix_FreeMusic(music_);
+	Mix_FreeChunk(shot_);
+
+	TTF_CloseFont(arialFont_);
 
 	std::vector<GameObject*>::iterator it;
-
 	if (gameObjects_->size() > 0)
 	{
 		for (it = gameObjects_->begin(); it != gameObjects_->end(); ++it)
@@ -71,16 +79,55 @@ bool World::Initialize()
 	
 	if(!LoadTiledScene()) return false;
 
+	missionStatus_ = ongoing;
+
+	SDL_Color colorRed = { 255, 0, 0 };
+	missionSuccessTex_->LoadFromRenderedText(Game->GetRenderer(), params->Get<std::string>("mission_success_text"), colorRed, arialFont_);
+	missionFailureTex_->LoadFromRenderedText(Game->GetRenderer(), params->Get<std::string>("mission_failure_text"), colorRed, arialFont_);
+
 	return true;
 }
 
 bool World::LoadAssets()
 {
-	if (!spriteSheet_->LoadFromFile(Game->GetRenderer(), params->Get<std::string>("spritesheet"))) return false;
+	if (!spriteSheet_->LoadFromFile(Game->GetRenderer(), params->Get<std::string>("spritesheet"))) 
+	{
+		printf("Failed to load spritesheet! SDL_image Error: %s\n", TTF_GetError());
+		return false;
+	}
 
-	if (!playerSprite_->LoadFromFile(Game->GetRenderer(), params->Get<std::string>("player1_sprite"))) return false;
+	if (!playerSprite_->LoadFromFile(Game->GetRenderer(), params->Get<std::string>("player1_sprite")))
+	{
+		printf("Failed to load player1_sprite! SDL_image Error: %s\n", TTF_GetError());
+		return false;
+	}
 
-	if (!enemySprite_->LoadFromFile(Game->GetRenderer(), params->Get<std::string>("enemy_sprite"))) return false;
+	if (!enemySprite_->LoadFromFile(Game->GetRenderer(), params->Get<std::string>("enemy_sprite")))
+	{
+		printf("Failed to load enemy_sprite! SDL_image Error: %s\n", TTF_GetError());
+		return false;
+	}
+
+	arialFont_ = TTF_OpenFont("arial.ttf", 40);
+	if (arialFont_ == NULL)
+	{
+		printf("Failed to load arial font! SDL_ttf Error: %s\n", TTF_GetError());
+		return false;
+	}
+
+	music_ = Mix_LoadMUS(params->Get<std::string>("music_theme").c_str());
+	if (music_ == NULL)
+	{
+		printf("Failed to load music_theme! SDL_mixer Error: %s\n", Mix_GetError());
+		return false;
+	}
+
+	shot_ = Mix_LoadWAV(params->Get<std::string>("sound_shot").c_str());
+	if (shot_ == NULL)
+	{
+		printf("Failed to load sound_shot! SDL_mixer Error: %s\n", Mix_GetError());
+		return false;
+	}
 
 	SetSpriteSheetClips();
 
@@ -150,8 +197,9 @@ void World::AddNewEnemy(math::Vector2D pos, int route)
 {
 	Enemy* en = new Enemy(this, pos, enemySprite_, route);
 	gameObjects_->push_back(en);
-	GoManager->AddGameObject(en);
 	collidableObjects_->push_back(en);
+	GoManager->AddGameObject(en);
+	++enemiesCount_;
 }
 
 void World::AddNewPlayer(math::Vector2D pos)
@@ -163,8 +211,21 @@ void World::AddNewPlayer(math::Vector2D pos)
 
 void World::AddNewBullet(int id, math::Vector2D pos, math::Vector2D	dir)
 {
+	AddShotSFX();
 	Bullet* bullet = new Bullet(this, id, pos, dir);
 	projectiles_->push_back(bullet);
+}
+
+void World::RemoveEnemy()
+{
+	--enemiesCount_;
+	if(!HasEnemiesAlive()) missionStatus_ = success;
+}
+
+void World::RemovePlayer()
+{
+	playerAlive_ = false;
+	missionStatus_ = failure;
 }
 
 void World::HandleInput(SDL_Event* evt)
@@ -178,6 +239,9 @@ void World::HandleInput(SDL_Event* evt)
 			break;
 		case SDLK_F2:
 			debugGraphOn_ = !debugGraphOn_;
+			break;
+		case SDLK_RETURN:
+			PlayMusic();
 			break;
 		}
 	}
@@ -213,10 +277,48 @@ void World::Update(float secs)
 	}
 
 	Msger->SendDelayedMsg(); //send all the queued messages ready to be sent
+
+	//if (missionStatus_ != ongoing)
+	//{
+	//	switch (missionStatus_)
+	//	{
+	//	case success:
+	//		
+
+	//		break;
+	//	case failure:
+
+
+	//		break;
+	//	default:
+	//		break;
+	//	}
+	//}
 }
 
 void World::Draw()
 {
+	if (missionStatus_ != ongoing)
+	{
+		switch (missionStatus_)
+		{
+		case success:			
+			missionSuccessTex_->Render(SCREEN_WIDTH/2 - missionSuccessTex_->GetWidth()/2, SCREEN_HEIGHT/2 - missionSuccessTex_->GetHeight()/2);
+			return;
+			break;
+
+		case failure:
+			missionFailureTex_->Render(SCREEN_WIDTH / 2 - missionFailureTex_->GetWidth() / 2, SCREEN_HEIGHT / 2 - missionFailureTex_->GetHeight() / 2);
+			return;
+
+			break;
+		default:
+			break;
+		}
+	}
+
+	ProcessSFX();
+
 	for (int t = 0; t < TILES_MAP_COUNT; t++)
 	{
 		tiles_[t]->Draw();
@@ -373,4 +475,37 @@ bool World::HasFOV(math::Vector2D origin, math::Vector2D direction, math::Vector
 		}
 	}
 	return false;
+}
+
+void World::PlayMusic()
+{
+	if (Mix_PlayingMusic() == 0)
+		Mix_PlayMusic(music_, -1);
+	else
+	{
+		if (Mix_PausedMusic() == 1)
+			Mix_ResumeMusic();
+		else
+			Mix_PauseMusic();
+	}
+	//Mix_HaltMusic();
+}
+
+void World::AddShotSFX()
+{
+	sfxList_.push_back(shot_);
+}
+
+void World::ProcessSFX()
+{
+	std::list<Mix_Chunk*>::iterator it = sfxList_.begin();
+	for (it; it != sfxList_.end();)
+	{
+		Mix_PlayChannel(-1, *it, 0);
+		it = sfxList_.erase(it);
+		if (it == sfxList_.end())
+			break;
+		else
+			++it;
+	}
 }

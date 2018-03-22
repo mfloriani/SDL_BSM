@@ -49,44 +49,44 @@
    <polyline points="0,0 784,1 784,-575 1,-576 0,0"/>
   </object>
   <object id="2" x="364" y="455">
-   <polyline points="0,0 -355,1"/>
+   <polyline points="14,0 -355,1"/>
   </object>
-  <object id="3" x="169" y="123">
-   <polyline points="0,0 0,-116"/>
+  <object id="3" x="169" y="140">
+   <polyline points="0,0 0,-133"/>
   </object>
   <object id="4" x="168" y="210">
-   <polyline points="0,0 -1,102 500,102"/>
+   <polyline points="-7,-12 -8,111 515,102"/>
   </object>
   <object id="5" x="489" y="114">
-   <polyline points="0,0 -1,466"/>
+   <polyline points="-1,-14 -1,466"/>
   </object>
  </objectgroup>
  <objectgroup name="Enemies">
-  <object id="6" x="84" y="57">
+  <object id="6" x="90" y="115">
    <properties>
     <property name="Route" type="int" value="12"/>
    </properties>
    <point/>
   </object>
-  <object id="7" x="211" y="272">
+  <object id="7" x="250" y="255">
    <properties>
     <property name="Route" type="int" value="13"/>
    </properties>
    <point/>
   </object>
-  <object id="8" x="524" y="354">
+  <object id="8" x="581" y="386">
    <properties>
     <property name="Route" type="int" value="15"/>
    </properties>
    <point/>
   </object>
-  <object id="9" x="753" y="43">
+  <object id="9" x="563" y="70">
    <properties>
     <property name="Route" type="int" value="14"/>
    </properties>
    <point/>
   </object>
-  <object id="10" x="441" y="385">
+  <object id="10" x="402" y="389">
    <properties>
     <property name="Route" type="int" value="17"/>
    </properties>
@@ -98,16 +98,16 @@
    <polyline points="-193,29 -38,104 -14,313"/>
   </object>
   <object id="13" name="13" x="212" y="268">
-   <polyline points="0,0 248,-2 244,-232 -5,-231"/>
+   <polyline points="38,-19 200,-17 195,-201 36,-202"/>
   </object>
   <object id="12" name="12" x="85" y="69">
-   <polyline points="0,0 4,325"/>
+   <polyline points="3,53 5,301"/>
   </object>
   <object id="15" name="15" x="527" y="353">
-   <polyline points="0,29 205.5,29.5 211.75,186.25 10,187"/>
+   <polyline points="53,28 183.5,28.5 185.75,170.25 49,168"/>
   </object>
   <object id="17" name="17" x="441" y="382">
-   <polyline points="0,0 -334,-4"/>
+   <polyline points="-39,0 -302,1"/>
   </object>
  </objectgroup>
  <objectgroup name="Players">

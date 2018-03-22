@@ -162,7 +162,7 @@
   </object>
  </objectgroup>
  <objectgroup name="Players">
-  <object id="31" x="464" y="272">
+  <object id="31" x="441" y="278">
    <point/>
   </object>
  </objectgroup>

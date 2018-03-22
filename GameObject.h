@@ -47,16 +47,16 @@ protected:
 		maxVelocity_(params->Get<float>("default_maxvelocity")),
 		direction_(dir)
 	{
-		UpdateBoxCollider();
+		//UpdateBoxCollider();
 	}
 
-	void UpdateBoxCollider()
+	/*void UpdateBoxCollider()
 	{
 		boxCollider_.x = position_.x;
 		boxCollider_.y = position_.y;
 		boxCollider_.w = SPRITE_WIDTH;
 		boxCollider_.h = SPRITE_HEIGHT;
-	}
+	}*/
 
 public:
 	virtual			~GameObject(){}

@@ -1,15 +1,21 @@
 --------
 --Assets
 spritesheet		= "spriteSheet16x16.png"
-player1_sprite	= "player1.png"
-enemy_sprite	= "enemy.png"
+player1_sprite	= "player48x35.png"
+enemy_sprite	= "enemy53x35.png"
 map_name		= "map_01.map"
 font_name		= "arial.ttf"
+music_theme     = "Suspense-Militar-GGJ18.mp3"
+sound_shot      = "391725__morganpurkis__battle-rifle.wav"
+
+----------
+--Missions
+mission_success_text = "MISSION ACCOMPLISHED"
+mission_failure_text = "MISSION FAILURE"
 
 --------
 --Tiled
 tiled_firstmap	= "tiled-importer.lua"
-
 
 -----------
 --Messaging
