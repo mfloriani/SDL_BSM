@@ -309,7 +309,7 @@ EnemyDying* EnemyDying::GetInstance()
 void EnemyDying::Enter(Enemy* e)
 {
 	std::cout << "Enter dying " << e->GetId() << std::endl;
-	Msger->SendMsg(e->GetId(), e->GetId(), 1.0f, Msg_Die, NULL);
+	Msger->SendMsg(e->GetId(), e->GetId(), 0.0f, Msg_Die, NULL);
 }
 
 void EnemyDying::Execute(Enemy* e)
@@ -350,8 +350,7 @@ EnemyDead* EnemyDead::GetInstance()
 void EnemyDead::Enter(Enemy* e)
 {
 	std::cout << "Enter dead " << e->GetId() << std::endl;
-	//e->Kill();
-	e->SetActive(false);
+	e->Die();
 }
 
 void EnemyDead::Execute(Enemy* e)

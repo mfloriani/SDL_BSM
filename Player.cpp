@@ -14,6 +14,15 @@ Player::Player(
 	lastShot_(0),
 	inputForce_(params->Get<float>("plyer_inputforce"))
 {
+	spriteW_ = sprite->GetWidth();
+	spriteH_ = sprite->GetHeight();
+
+	gunPos_ = math::Vector2D(spriteW_/2, spriteH_/2);
+	
+	boxCollider_.x = position_.x;
+	boxCollider_.y = position_.y;
+	boxCollider_.w = spriteW_;
+	boxCollider_.h = spriteH_;
 }
 
 Player::~Player()
@@ -110,15 +119,16 @@ math::Vector2D Player::CalcForces()
 
 void Player::Update(float secs)
 {
+	if (!IsActive()) return;
+
 	Rotate();
 	
 	if (m_fireButtonPressed && lastShot_ >= rateOfFire_)
 	{
-		m_fireButtonPressed = false;
-		lastShot_ = 0;
-		world_->AddNewBullet(GetId(), position_, direction_);
+		Shoot();
 	}
 	lastShot_ += secs;
+	
 
 	math::Vector2D forces = CalcForces();
 	math::Vector2D accelSecs = (forces / mass_);
@@ -135,8 +145,8 @@ void Player::Update(float secs)
 	SDL_Rect nextPosCollider;
 	nextPosCollider.x = nextPosition.x;
 	nextPosCollider.y = nextPosition.y;
-	nextPosCollider.w = sprite_->GetWidth();
-	nextPosCollider.h = sprite_->GetHeight();
+	nextPosCollider.w = spriteW_;
+	nextPosCollider.h = spriteW_;
 
 	bool collided = false;
 
@@ -162,7 +172,8 @@ void Player::Update(float secs)
 	if (!collided)
 	{
 		position_  += velocity_ * secs;		//move the real position only when there is no collision detected
-		UpdateBoxCollider();
+		boxCollider_.x = position_.x;
+		boxCollider_.y = position_.y;
 	}
 	
 }
@@ -173,7 +184,7 @@ bool Player::HandleMessage(const Message& msg)
 	switch (msg.Msg)
 	{
 	case MessageType::Msg_BulletHit:
-		SetActive(false);
+		Die();
 		break;
 	default:
 		break;
@@ -186,6 +197,34 @@ void Player::Draw()
 	if (!IsActive()) return;	//dont process this gameobject
 
 	sprite_->Render(position_.x, position_.y, NULL, degreeAngle_, NULL, SDL_FLIP_NONE);
+
+	if (world_->IsDebugOn())
+	{
+		SDL_SetRenderDrawColor(Game->GetRenderer(), 255, 0, 0, SDL_ALPHA_OPAQUE);
+		SDL_RenderDrawRect(Game->GetRenderer(), &boxCollider_);
+		
+		math::Vector2D pos = position_;
+		pos.x += spriteW_ / 2;
+		pos.y += spriteH_ / 2;
+		math::Vector2D dirOffset = pos + (direction_ * 50);
+
+		SDL_RenderDrawLine(Game->GetRenderer(), pos.x, pos.y, dirOffset.x, dirOffset.y);
+
+		math::Vector2D perp = math::perp(direction_);
+		math::Vector2D perpOffSet1 = pos + (perp * 100);
+		math::Vector2D perpOffSet2 = pos - (perp * 100);
+
+		SDL_RenderDrawLine(Game->GetRenderer(), perpOffSet2.x, perpOffSet2.y, perpOffSet1.x, perpOffSet1.y);
+
+		//math::Vector2D pos2 = position_;
+		//pos2.x += spriteW_;
+		//pos2.y += spriteH_;
+		//math::Vector2D dirOffset2 = gunPos_;// pos2 + (gunPos_ * 2);
+		//
+		//SDL_RenderDrawLine(Game->GetRenderer(), pos2.x, pos2.y, dirOffset2.x, dirOffset2.y);
+	}
+	
+
 }
 
 void Player::Rotate()
@@ -203,4 +242,26 @@ void Player::Rotate()
 
 	radianAngle_ += angle;
 	degreeAngle_ += math::toDegrees(angle);
+
+	//std::cout << "CurGunPos= " << gunPos_ << " Angle= " << angle;
+
+	//gunPos_.rotate(angle);
+	//gunPos_ = gunPos_.newBySizeAngle(1, angle);
+
+	//std::cout << " NewGunPos" << gunPos_ << std::endl;
+}
+
+void Player::Shoot()
+{	
+	m_fireButtonPressed = false;
+	lastShot_ = 0;
+	//math::Vector2D(spriteW_, spriteH_)
+	//math::Vector2D pos = math::Vector2D(position_.x + spriteW_ / 2, position_.y + spriteH_ / 2) +gunPos_;
+	world_->AddNewBullet(GetId(), (position_ + gunPos_), direction_);
+}
+
+void Player::Die()
+{
+	world_->RemovePlayer();
+	SetActive(false);
 }

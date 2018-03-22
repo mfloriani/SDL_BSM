@@ -15,6 +15,7 @@
 #include <map>
 #include "LuaTiledImporter.h"
 #include "PatrolRoute.h"
+#include <SDL_mixer.h>
 
 class Player;
 
@@ -22,6 +23,13 @@ class World
 {
 private:
 	typedef Graph<NavGraphNode<>, NavGraphEdge>	NavGraph;
+
+	enum MissionStatus
+	{
+		ongoing,
+		success,
+		failure
+	};
 
 private:
 	std::vector<GameObject*>*	gameObjects_;
@@ -40,6 +48,17 @@ private:
 	int							numCellsY_;
 	std::vector<Wall*>			walls_;
 	PatrolRoutes				routes_;
+	bool						debugOn_;
+	bool						debugGraphOn_;
+	Mix_Music*					music_;
+	Mix_Chunk*					shot_;
+	std::list<Mix_Chunk*>		sfxList_;
+	int 						enemiesCount_;
+	int							missionStatus_;
+	bool						playerAlive_;
+	Texture*					missionSuccessTex_;
+	Texture*					missionFailureTex_;
+	TTF_Font*					arialFont_;
 
 public:
 	World();
@@ -52,6 +71,8 @@ public:
 	void AddNewEnemy(math::Vector2D pos, int route);
 	void AddNewPlayer(math::Vector2D pos);
 	void AddNewBullet(int id, math::Vector2D pos, math::Vector2D dir);
+	void RemoveEnemy();
+	void RemovePlayer();
 	void HandleInput(SDL_Event* evt);
 	void Update(float secs);
 	void Draw();
@@ -70,6 +91,11 @@ public:
 	NavGraph&					GetNavGraph()const { return *navGraph_; }
 	Route						GetPatrolRoute(int route) { return routes_.patrolRoutes_[route]; }
 	const std::vector<Wall*>&	GetWalls()const{ return walls_; }
-
+	bool						IsDebugOn()const { return debugOn_; }
+	void						PlayMusic();
+	void						ProcessSFX();
+	void						AddShotSFX();
+	bool						IsPlayerAlive()const { return playerAlive_; };
+	bool						HasEnemiesAlive()const { return enemiesCount_ > 0; };
 };
 

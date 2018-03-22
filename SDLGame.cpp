@@ -93,6 +93,8 @@ int SDLGame::Run()
 	Uint32 now = 0;
 	int framesCount = 0;
 	
+	world_->PlayMusic();
+
 	while (!quit)
 	{
 		//calculate the time that has passed since last frame

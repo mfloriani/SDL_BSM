@@ -23,12 +23,16 @@ private:
 	bool m_fireButtonPressed;
 
 	float inputForce_;
-
 	float rateOfFire_;
 	float lastShot_;
 
+	int	spriteW_;
+	int	spriteH_;
+	math::Vector2D	gunPos_;
+
 	virtual math::Vector2D CalcForces();
-	void Player::Rotate();
+	void Rotate();
+	void Shoot();
 
 public:
 	Player(World*			world, 
@@ -41,6 +45,7 @@ public:
 	void	Draw();
 	bool	HandleMessage(const Message& msg);
 	World*	GetWorld()const{ return world_; }
+	void	Die();
 	
 };
 

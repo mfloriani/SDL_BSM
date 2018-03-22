@@ -61,6 +61,7 @@ void Bullet::Draw()
 {
 	if (!IsActive()) return;	//dont process this gameobject
 
+	SDL_SetRenderDrawColor(Game->GetRenderer(), 255, 0, 0, SDL_ALPHA_OPAQUE);
 	SDL_RenderDrawRect(Game->GetRenderer(), &sprite_);
 }
 

@@ -374,15 +374,18 @@ void Graph<node_type, edge_type>::Draw(SDL_Renderer* r)
 {
 	if (GetNodesCount() == 0) return;
 	
-	SDL_SetRenderDrawColor(r, 0xFF, 0x00, 0x00, 0xFF);
+	SDL_SetRenderDrawColor(r, 0x00, 0xFF, 0xFF, 0xFF);
 
 	NodeVector::const_iterator curNode = nodes_.begin();
 	for (curNode; curNode != nodes_.end(); ++curNode)
 	{
 		SDL_RenderDrawPoint(r, curNode->GetPosition().x, curNode->GetPosition().y);
 
-		EdgeList::const_iterator curEdge = edges_[curNode->GetId()].begin();
-		for (curEdge; curEdge != edges_[curNode->GetId()].end(); ++curEdge)
+		int id = curNode->GetId();
+		if (id == invalid_node_index) continue;
+
+		EdgeList::const_iterator curEdge = edges_[id].begin();
+		for (curEdge; curEdge != edges_[id].end(); ++curEdge)
 		{
 			SDL_RenderDrawLine(
 				r,
@@ -393,4 +396,5 @@ void Graph<node_type, edge_type>::Draw(SDL_Renderer* r)
 			);
 		}	
 	}
+
 }
