@@ -19,6 +19,7 @@ Enemy::Enemy(
 	spriteH_ = sprite->GetHeight();
 
 	gunPos_ = math::Vector2D(spriteW_ / 2, spriteH_ / 2);
+	//gunPos_ = math::Vector2D(0, 0);
 
 	boxCollider_.x = position_.x;
 	boxCollider_.y = position_.y;

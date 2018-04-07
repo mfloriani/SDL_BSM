@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" tiledversion="1.1.2" orientation="orthogonal" renderorder="right-down" width="50" height="37" tilewidth="16" tileheight="16" infinite="0" nextobjectid="19">
+<map version="1.0" tiledversion="1.1.2" orientation="orthogonal" renderorder="right-down" width="50" height="37" tilewidth="16" tileheight="16" infinite="0" nextobjectid="20">
  <tileset firstgid="1" name="spriteSheet16x16" tilewidth="16" tileheight="16" tilecount="10" columns="10">
   <image source="spriteSheet16x16.png" width="160" height="16"/>
  </tileset>

@@ -278,22 +278,6 @@ void World::Update(float secs)
 
 	Msger->SendDelayedMsg(); //send all the queued messages ready to be sent
 
-	//if (missionStatus_ != ongoing)
-	//{
-	//	switch (missionStatus_)
-	//	{
-	//	case success:
-	//		
-
-	//		break;
-	//	case failure:
-
-
-	//		break;
-	//	default:
-	//		break;
-	//	}
-	//}
 }
 
 void World::Draw()
