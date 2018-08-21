@@ -53,4 +53,6 @@ bullet_damage		= 100
 path_waypointdist	= 1850
 edge_defaultcost	= 1.0
 
---script->Get<float>("")
+--Volume
+volume_music		= 50
+volume_sfx			= 20
