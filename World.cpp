@@ -122,12 +122,16 @@ bool World::LoadAssets()
 		return false;
 	}
 
+
 	shot_ = Mix_LoadWAV(params->Get<std::string>("sound_shot").c_str());
 	if (shot_ == NULL)
 	{
 		printf("Failed to load sound_shot! SDL_mixer Error: %s\n", Mix_GetError());
 		return false;
 	}
+
+	Mix_VolumeChunk(shot_, params->Get<std::int32_t>("volume_sfx"));
+	Mix_VolumeMusic(params->Get<std::int32_t>("volume_music"));
 
 	SetSpriteSheetClips();
 
