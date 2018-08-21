@@ -1,5 +1,5 @@
 # SDL_BSM
-Game prototype developed as part of a gamedev postgraduation course at PUCPR in 2018.
+Game prototype developed as part of a gamedev postgraduation course in 2018.
 
 # Tech
 * C++
