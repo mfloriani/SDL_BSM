@@ -293,13 +293,11 @@ void World::Draw()
 		case success:			
 			missionSuccessTex_->Render(SCREEN_WIDTH/2 - missionSuccessTex_->GetWidth()/2, SCREEN_HEIGHT/2 - missionSuccessTex_->GetHeight()/2);
 			return;
-			break;
 
 		case failure:
 			missionFailureTex_->Render(SCREEN_WIDTH / 2 - missionFailureTex_->GetWidth() / 2, SCREEN_HEIGHT / 2 - missionFailureTex_->GetHeight() / 2);
 			return;
 
-			break;
 		default:
 			break;
 		}
