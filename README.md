@@ -9,4 +9,4 @@ Game prototype developed as part of a gamedev postgraduation course in 2018.
 
 # Gameplay video
 
-[![Gameplay Video](sample-gameplay.png)](https://youtu.be/TY-zbuZDEy4-Y "Gameplay")
+[![Gameplay Video](Assets/sample-gameplay.png)](https://youtu.be/TY-zbuZDEy4-Y "Gameplay")
