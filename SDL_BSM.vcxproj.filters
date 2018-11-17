@@ -1,13 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Resource Files">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
-    </Filter>
-    <Filter Include="Misc">
-      <UniqueIdentifier>{bfaaabf5-addb-4b4a-a182-dddf5062ba15}</UniqueIdentifier>
-    </Filter>
     <Filter Include="AI">
       <UniqueIdentifier>{bde3bac3-e593-46c5-ab0f-dd7afb6f1c09}</UniqueIdentifier>
     </Filter>
@@ -29,224 +22,285 @@
     <Filter Include="World">
       <UniqueIdentifier>{449b0e0d-16ae-4140-a7fe-05b85d95acf6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="GameObjects\Weapons">
-      <UniqueIdentifier>{7f04e7a2-07de-4a39-82d9-f8967b55d848}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Script">
-      <UniqueIdentifier>{db5212da-e2af-4c64-97e2-c32454062c41}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Game">
       <UniqueIdentifier>{cef457de-6608-4b16-b704-ded56116ecf6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Assets">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Math">
+      <UniqueIdentifier>{bfaaabf5-addb-4b4a-a182-dddf5062ba15}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utils">
+      <UniqueIdentifier>{3c68409d-be7e-41de-8f68-dbe9565d8185}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scripting">
+      <UniqueIdentifier>{db5212da-e2af-4c64-97e2-c32454062c41}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="AffineTransform.cpp">
-      <Filter>Misc</Filter>
-    </ClCompile>
-    <ClCompile Include="MathUtil.cpp">
-      <Filter>Misc</Filter>
-    </ClCompile>
-    <ClCompile Include="Matrix3.cpp">
-      <Filter>Misc</Filter>
-    </ClCompile>
-    <ClCompile Include="Texture.cpp">
-      <Filter>Misc</Filter>
-    </ClCompile>
-    <ClCompile Include="Timer.cpp">
-      <Filter>Misc</Filter>
-    </ClCompile>
-    <ClCompile Include="Vector2D.cpp">
-      <Filter>Misc</Filter>
-    </ClCompile>
-    <ClCompile Include="Vector3D.cpp">
-      <Filter>Misc</Filter>
-    </ClCompile>
-    <ClCompile Include="WindowsClock.cpp">
-      <Filter>Misc</Filter>
-    </ClCompile>
-    <ClCompile Include="Messenger.cpp">
-      <Filter>Messaging</Filter>
-    </ClCompile>
-    <ClCompile Include="EnemyStates.cpp">
+    <ClCompile Include="AI\FSM\EnemyStates.cpp">
       <Filter>AI\FSM</Filter>
     </ClCompile>
-    <ClCompile Include="SteeringBehaviors.cpp">
-      <Filter>AI\Steering</Filter>
-    </ClCompile>
-    <ClCompile Include="Pathfinder.cpp">
+    <ClCompile Include="AI\Pathfinding\Pathfinder.cpp">
       <Filter>AI\Pathfinding</Filter>
     </ClCompile>
-    <ClCompile Include="Bullet.cpp">
-      <Filter>GameObjects</Filter>
+    <ClCompile Include="AI\Steering\SteeringBehaviors.cpp">
+      <Filter>AI\Steering</Filter>
     </ClCompile>
-    <ClCompile Include="Enemy.cpp">
-      <Filter>GameObjects</Filter>
-    </ClCompile>
-    <ClCompile Include="GameObjectManager.cpp">
-      <Filter>GameObjects</Filter>
-    </ClCompile>
-    <ClCompile Include="Player.cpp">
-      <Filter>GameObjects</Filter>
-    </ClCompile>
-    <ClCompile Include="World.cpp">
-      <Filter>World</Filter>
-    </ClCompile>
-    <ClCompile Include="Tile.cpp">
-      <Filter>World</Filter>
-    </ClCompile>
-    <ClCompile Include="LuaParameters.cpp">
-      <Filter>Script</Filter>
-    </ClCompile>
-    <ClCompile Include="Main.cpp">
+    <ClCompile Include="Game\Main.cpp">
       <Filter>Game</Filter>
     </ClCompile>
-    <ClCompile Include="SDLGame.cpp">
+    <ClCompile Include="Game\SDLGame.cpp">
       <Filter>Game</Filter>
     </ClCompile>
-    <ClCompile Include="LuaTiledImporter.cpp">
-      <Filter>Script</Filter>
+    <ClCompile Include="GameObjects\Bullet.cpp">
+      <Filter>GameObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObjects\Enemy.cpp">
+      <Filter>GameObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObjects\GameObjectManager.cpp">
+      <Filter>GameObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObjects\Player.cpp">
+      <Filter>GameObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="Messaging\Messenger.cpp">
+      <Filter>Messaging</Filter>
+    </ClCompile>
+    <ClCompile Include="Math\AffineTransform.cpp">
+      <Filter>Math</Filter>
+    </ClCompile>
+    <ClCompile Include="Math\MathUtil.cpp">
+      <Filter>Math</Filter>
+    </ClCompile>
+    <ClCompile Include="Math\Matrix3.cpp">
+      <Filter>Math</Filter>
+    </ClCompile>
+    <ClCompile Include="Math\Vector2D.cpp">
+      <Filter>Math</Filter>
+    </ClCompile>
+    <ClCompile Include="Math\Vector3D.cpp">
+      <Filter>Math</Filter>
+    </ClCompile>
+    <ClCompile Include="Scripting\LuaParameters.cpp">
+      <Filter>Scripting</Filter>
+    </ClCompile>
+    <ClCompile Include="Scripting\LuaTiledImporter.cpp">
+      <Filter>Scripting</Filter>
+    </ClCompile>
+    <ClCompile Include="Utils\Texture.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="Utils\Timer.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="Utils\WindowsClock.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="World\Tile.cpp">
+      <Filter>World</Filter>
+    </ClCompile>
+    <ClCompile Include="World\World.cpp">
+      <Filter>World</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="AffineTransform.h">
-      <Filter>Misc</Filter>
-    </ClInclude>
-    <ClInclude Include="MathUtil.h">
-      <Filter>Misc</Filter>
-    </ClInclude>
-    <ClInclude Include="Matrix3.h">
-      <Filter>Misc</Filter>
-    </ClInclude>
-    <ClInclude Include="Vector2D.h">
-      <Filter>Misc</Filter>
-    </ClInclude>
-    <ClInclude Include="Vector3D.h">
-      <Filter>Misc</Filter>
-    </ClInclude>
-    <ClInclude Include="WindowsClock.h">
-      <Filter>Misc</Filter>
-    </ClInclude>
-    <ClInclude Include="Timer.h">
-      <Filter>Misc</Filter>
-    </ClInclude>
-    <ClInclude Include="Config.h">
-      <Filter>Misc</Filter>
-    </ClInclude>
-    <ClInclude Include="Texture.h">
-      <Filter>Misc</Filter>
-    </ClInclude>
-    <ClInclude Include="GameMessages.h">
-      <Filter>Messaging</Filter>
-    </ClInclude>
-    <ClInclude Include="Message.h">
-      <Filter>Messaging</Filter>
-    </ClInclude>
-    <ClInclude Include="Messenger.h">
-      <Filter>Messaging</Filter>
-    </ClInclude>
-    <ClInclude Include="EnemyStates.h">
+    <ClInclude Include="AI\FSM\EnemyStates.h">
       <Filter>AI\FSM</Filter>
     </ClInclude>
-    <ClInclude Include="State.h">
+    <ClInclude Include="AI\FSM\State.h">
       <Filter>AI\FSM</Filter>
     </ClInclude>
-    <ClInclude Include="StateMachine.h">
+    <ClInclude Include="AI\FSM\StateMachine.h">
       <Filter>AI\FSM</Filter>
     </ClInclude>
-    <ClInclude Include="GraphNodeTypes.h">
+    <ClInclude Include="AI\Pathfinding\AStar.h">
       <Filter>AI\Pathfinding</Filter>
     </ClInclude>
-    <ClInclude Include="SteeringBehaviors.h">
+    <ClInclude Include="AI\Pathfinding\AStarHeuristics.h">
+      <Filter>AI\Pathfinding</Filter>
+    </ClInclude>
+    <ClInclude Include="AI\Pathfinding\Graph.h">
+      <Filter>AI\Pathfinding</Filter>
+    </ClInclude>
+    <ClInclude Include="AI\Pathfinding\GraphEdgeTypes.h">
+      <Filter>AI\Pathfinding</Filter>
+    </ClInclude>
+    <ClInclude Include="AI\Pathfinding\GraphNodeTypes.h">
+      <Filter>AI\Pathfinding</Filter>
+    </ClInclude>
+    <ClInclude Include="AI\Pathfinding\NodeTypeEnum.h">
+      <Filter>AI\Pathfinding</Filter>
+    </ClInclude>
+    <ClInclude Include="AI\Pathfinding\Pathfinder.h">
+      <Filter>AI\Pathfinding</Filter>
+    </ClInclude>
+    <ClInclude Include="AI\Steering\Path.h">
       <Filter>AI\Steering</Filter>
     </ClInclude>
-    <ClInclude Include="NodeTypeEnum.h">
-      <Filter>AI\Pathfinding</Filter>
-    </ClInclude>
-    <ClInclude Include="GraphEdgeTypes.h">
-      <Filter>AI\Pathfinding</Filter>
-    </ClInclude>
-    <ClInclude Include="Graph.h">
-      <Filter>AI\Pathfinding</Filter>
-    </ClInclude>
-    <ClInclude Include="Pathfinder.h">
-      <Filter>AI\Pathfinding</Filter>
-    </ClInclude>
-    <ClInclude Include="Bullet.h">
-      <Filter>GameObjects</Filter>
-    </ClInclude>
-    <ClInclude Include="Enemy.h">
-      <Filter>GameObjects</Filter>
-    </ClInclude>
-    <ClInclude Include="GameObject.h">
-      <Filter>GameObjects</Filter>
-    </ClInclude>
-    <ClInclude Include="GameObjectManager.h">
-      <Filter>GameObjects</Filter>
-    </ClInclude>
-    <ClInclude Include="Player.h">
-      <Filter>GameObjects</Filter>
-    </ClInclude>
-    <ClInclude Include="World.h">
-      <Filter>World</Filter>
-    </ClInclude>
-    <ClInclude Include="Tile.h">
-      <Filter>World</Filter>
-    </ClInclude>
-    <ClInclude Include="PriorityQueue.h">
-      <Filter>Misc</Filter>
-    </ClInclude>
-    <ClInclude Include="AStarHeuristics.h">
-      <Filter>AI\Pathfinding</Filter>
-    </ClInclude>
-    <ClInclude Include="AStar.h">
-      <Filter>AI\Pathfinding</Filter>
-    </ClInclude>
-    <ClInclude Include="Path.h">
+    <ClInclude Include="AI\Steering\PatrolRoute.h">
       <Filter>AI\Steering</Filter>
     </ClInclude>
-    <ClInclude Include="Wall.h">
-      <Filter>World</Filter>
+    <ClInclude Include="AI\Steering\SteeringBehaviors.h">
+      <Filter>AI\Steering</Filter>
     </ClInclude>
-    <ClInclude Include="Geometry.h">
-      <Filter>Misc</Filter>
-    </ClInclude>
-    <ClInclude Include="WorldFunctions.h">
-      <Filter>World</Filter>
-    </ClInclude>
-    <ClInclude Include="Weapon.h">
-      <Filter>GameObjects\Weapons</Filter>
-    </ClInclude>
-    <ClInclude Include="Pistol.h">
-      <Filter>GameObjects\Weapons</Filter>
-    </ClInclude>
-    <ClInclude Include="Utils.h">
-      <Filter>Misc</Filter>
-    </ClInclude>
-    <ClInclude Include="LuaScript.h">
-      <Filter>Script</Filter>
-    </ClInclude>
-    <ClInclude Include="LuaParameters.h">
-      <Filter>Script</Filter>
-    </ClInclude>
-    <ClInclude Include="SDLGame.h">
+    <ClInclude Include="Game\SDLGame.h">
       <Filter>Game</Filter>
     </ClInclude>
-    <ClInclude Include="LuaTiledImporter.h">
-      <Filter>Script</Filter>
+    <ClInclude Include="GameObjects\Bullet.h">
+      <Filter>GameObjects</Filter>
     </ClInclude>
-    <ClInclude Include="LuaCFunctions.h">
-      <Filter>Script</Filter>
+    <ClInclude Include="GameObjects\Enemy.h">
+      <Filter>GameObjects</Filter>
     </ClInclude>
-    <ClInclude Include="PatrolRoute.h">
-      <Filter>AI\Steering</Filter>
+    <ClInclude Include="GameObjects\GameObject.h">
+      <Filter>GameObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObjects\GameObjectManager.h">
+      <Filter>GameObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObjects\Pistol.h">
+      <Filter>GameObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObjects\Player.h">
+      <Filter>GameObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObjects\Weapon.h">
+      <Filter>GameObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="Messaging\GameMessages.h">
+      <Filter>Messaging</Filter>
+    </ClInclude>
+    <ClInclude Include="Messaging\Message.h">
+      <Filter>Messaging</Filter>
+    </ClInclude>
+    <ClInclude Include="Messaging\Messenger.h">
+      <Filter>Messaging</Filter>
+    </ClInclude>
+    <ClInclude Include="Math\AffineTransform.h">
+      <Filter>Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Math\Geometry.h">
+      <Filter>Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Math\MathUtil.h">
+      <Filter>Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Math\Matrix3.h">
+      <Filter>Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Math\Vector2D.h">
+      <Filter>Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Math\Vector3D.h">
+      <Filter>Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Scripting\LuaCFunctions.h">
+      <Filter>Scripting</Filter>
+    </ClInclude>
+    <ClInclude Include="Scripting\LuaParameters.h">
+      <Filter>Scripting</Filter>
+    </ClInclude>
+    <ClInclude Include="Scripting\LuaScript.h">
+      <Filter>Scripting</Filter>
+    </ClInclude>
+    <ClInclude Include="Scripting\LuaTiledImporter.h">
+      <Filter>Scripting</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\Config.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\PriorityQueue.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\Texture.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\Timer.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\Utils.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\WindowsClock.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="World\Tile.h">
+      <Filter>World</Filter>
+    </ClInclude>
+    <ClInclude Include="World\Wall.h">
+      <Filter>World</Filter>
+    </ClInclude>
+    <ClInclude Include="World\World.h">
+      <Filter>World</Filter>
+    </ClInclude>
+    <ClInclude Include="World\WorldFunctions.h">
+      <Filter>World</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="map_01.map">
-      <Filter>Resource Files</Filter>
+    <Media Include="Assets\391725__morganpurkis__battle-rifle.wav">
+      <Filter>Assets</Filter>
+    </Media>
+    <Media Include="Assets\Suspense-Militar-GGJ18.mp3">
+      <Filter>Assets</Filter>
+    </Media>
+  </ItemGroup>
+  <ItemGroup>
+    <Font Include="Assets\arial.ttf">
+      <Filter>Assets</Filter>
+    </Font>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Assets\enemy53x35.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\enemy-prot.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\player1-prot.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\player32x23.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\player48x35.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\player64x46.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\sample-gameplay.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\spriteSheet16x16.png">
+      <Filter>Assets</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Assets\map_01.map">
+      <Filter>Assets</Filter>
     </None>
-    <None Include="Params.lua">
-      <Filter>Script</Filter>
+    <None Include="Assets\stage1.tmx">
+      <Filter>Assets</Filter>
+    </None>
+    <None Include="Assets\stage2.tmx">
+      <Filter>Assets</Filter>
+    </None>
+    <None Include="Assets\stage3.tmx">
+      <Filter>Assets</Filter>
+    </None>
+    <None Include="Scripting\Params.lua">
+      <Filter>Scripting</Filter>
+    </None>
+    <None Include="Scripting\tiled-data.lua">
+      <Filter>Scripting</Filter>
+    </None>
+    <None Include="Scripting\tiled-importer.lua">
+      <Filter>Scripting</Filter>
     </None>
   </ItemGroup>
 </Project>

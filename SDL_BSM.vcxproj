@@ -54,6 +54,11 @@
       <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;SDL2_mixer.lib;SDL2_ttf.lib;SDL2_net.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SubSystem>Console</SubSystem>
     </Link>
+    <PostBuildEvent>
+      <Command>xcopy "$(ProjectDir)Libs\*.dll" "$(OutDir)" /i /r /y
+xcopy "$(ProjectDir)Assets" "$(OutDir)Assets" /i /r /y
+xcopy "$(ProjectDir)Scripting\*.lua" "$(OutDir)Scripting" /i /r /y</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -70,78 +75,100 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="AffineTransform.cpp" />
-    <ClCompile Include="Bullet.cpp" />
-    <ClCompile Include="Enemy.cpp" />
-    <ClCompile Include="EnemyStates.cpp" />
-    <ClCompile Include="GameObjectManager.cpp" />
-    <ClCompile Include="LuaParameters.cpp" />
-    <ClCompile Include="LuaTiledImporter.cpp" />
-    <ClCompile Include="Main.cpp" />
-    <ClCompile Include="MathUtil.cpp" />
-    <ClCompile Include="Matrix3.cpp" />
-    <ClCompile Include="Messenger.cpp" />
-    <ClCompile Include="Pathfinder.cpp" />
-    <ClCompile Include="Player.cpp" />
-    <ClCompile Include="SDLGame.cpp" />
-    <ClCompile Include="SteeringBehaviors.cpp" />
-    <ClCompile Include="Texture.cpp" />
-    <ClCompile Include="Tile.cpp" />
-    <ClCompile Include="Timer.cpp" />
-    <ClCompile Include="Vector2D.cpp" />
-    <ClCompile Include="Vector3D.cpp" />
-    <ClCompile Include="WindowsClock.cpp" />
-    <ClCompile Include="World.cpp" />
+    <ClCompile Include="AI\FSM\EnemyStates.cpp" />
+    <ClCompile Include="AI\Pathfinding\Pathfinder.cpp" />
+    <ClCompile Include="AI\Steering\SteeringBehaviors.cpp" />
+    <ClCompile Include="GameObjects\Bullet.cpp" />
+    <ClCompile Include="GameObjects\Enemy.cpp" />
+    <ClCompile Include="GameObjects\GameObjectManager.cpp" />
+    <ClCompile Include="GameObjects\Player.cpp" />
+    <ClCompile Include="Game\Main.cpp" />
+    <ClCompile Include="Game\SDLGame.cpp" />
+    <ClCompile Include="Math\AffineTransform.cpp" />
+    <ClCompile Include="Math\MathUtil.cpp" />
+    <ClCompile Include="Math\Matrix3.cpp" />
+    <ClCompile Include="Math\Vector2D.cpp" />
+    <ClCompile Include="Math\Vector3D.cpp" />
+    <ClCompile Include="Messaging\Messenger.cpp" />
+    <ClCompile Include="Scripting\LuaParameters.cpp" />
+    <ClCompile Include="Scripting\LuaTiledImporter.cpp" />
+    <ClCompile Include="Utils\Texture.cpp" />
+    <ClCompile Include="Utils\Timer.cpp" />
+    <ClCompile Include="Utils\WindowsClock.cpp" />
+    <ClCompile Include="World\Tile.cpp" />
+    <ClCompile Include="World\World.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="AffineTransform.h" />
-    <ClInclude Include="AStar.h" />
-    <ClInclude Include="AStarHeuristics.h" />
-    <ClInclude Include="Bullet.h" />
-    <ClInclude Include="Config.h" />
-    <ClInclude Include="Enemy.h" />
-    <ClInclude Include="EnemyStates.h" />
-    <ClInclude Include="GameMessages.h" />
-    <ClInclude Include="GameObject.h" />
-    <ClInclude Include="GameObjectManager.h" />
-    <ClInclude Include="Geometry.h" />
-    <ClInclude Include="Graph.h" />
-    <ClInclude Include="GraphEdgeTypes.h" />
-    <ClInclude Include="GraphNodeTypes.h" />
-    <ClInclude Include="LuaCFunctions.h" />
-    <ClInclude Include="LuaParameters.h" />
-    <ClInclude Include="LuaScript.h" />
-    <ClInclude Include="LuaTiledImporter.h" />
-    <ClInclude Include="MathUtil.h" />
-    <ClInclude Include="Matrix3.h" />
-    <ClInclude Include="Message.h" />
-    <ClInclude Include="Messenger.h" />
-    <ClInclude Include="NodeTypeEnum.h" />
-    <ClInclude Include="Path.h" />
-    <ClInclude Include="Pathfinder.h" />
-    <ClInclude Include="Pistol.h" />
-    <ClInclude Include="Player.h" />
-    <ClInclude Include="PriorityQueue.h" />
-    <ClInclude Include="PatrolRoute.h" />
-    <ClInclude Include="SDLGame.h" />
-    <ClInclude Include="State.h" />
-    <ClInclude Include="StateMachine.h" />
-    <ClInclude Include="SteeringBehaviors.h" />
-    <ClInclude Include="Texture.h" />
-    <ClInclude Include="Tile.h" />
-    <ClInclude Include="Timer.h" />
-    <ClInclude Include="Utils.h" />
-    <ClInclude Include="Vector2D.h" />
-    <ClInclude Include="Vector3D.h" />
-    <ClInclude Include="Wall.h" />
-    <ClInclude Include="Weapon.h" />
-    <ClInclude Include="WorldFunctions.h" />
-    <ClInclude Include="WindowsClock.h" />
-    <ClInclude Include="World.h" />
+    <ClInclude Include="AI\FSM\EnemyStates.h" />
+    <ClInclude Include="AI\FSM\State.h" />
+    <ClInclude Include="AI\FSM\StateMachine.h" />
+    <ClInclude Include="AI\Pathfinding\AStar.h" />
+    <ClInclude Include="AI\Pathfinding\AStarHeuristics.h" />
+    <ClInclude Include="AI\Pathfinding\Graph.h" />
+    <ClInclude Include="AI\Pathfinding\GraphEdgeTypes.h" />
+    <ClInclude Include="AI\Pathfinding\GraphNodeTypes.h" />
+    <ClInclude Include="AI\Pathfinding\NodeTypeEnum.h" />
+    <ClInclude Include="AI\Pathfinding\Pathfinder.h" />
+    <ClInclude Include="AI\Steering\Path.h" />
+    <ClInclude Include="AI\Steering\PatrolRoute.h" />
+    <ClInclude Include="AI\Steering\SteeringBehaviors.h" />
+    <ClInclude Include="GameObjects\Bullet.h" />
+    <ClInclude Include="GameObjects\Enemy.h" />
+    <ClInclude Include="GameObjects\GameObject.h" />
+    <ClInclude Include="GameObjects\GameObjectManager.h" />
+    <ClInclude Include="GameObjects\Pistol.h" />
+    <ClInclude Include="GameObjects\Player.h" />
+    <ClInclude Include="GameObjects\Weapon.h" />
+    <ClInclude Include="Game\SDLGame.h" />
+    <ClInclude Include="Math\AffineTransform.h" />
+    <ClInclude Include="Math\Geometry.h" />
+    <ClInclude Include="Math\MathUtil.h" />
+    <ClInclude Include="Math\Matrix3.h" />
+    <ClInclude Include="Math\Vector2D.h" />
+    <ClInclude Include="Math\Vector3D.h" />
+    <ClInclude Include="Messaging\GameMessages.h" />
+    <ClInclude Include="Messaging\Message.h" />
+    <ClInclude Include="Messaging\Messenger.h" />
+    <ClInclude Include="Scripting\LuaCFunctions.h" />
+    <ClInclude Include="Scripting\LuaParameters.h" />
+    <ClInclude Include="Scripting\LuaScript.h" />
+    <ClInclude Include="Scripting\LuaTiledImporter.h" />
+    <ClInclude Include="Utils\Config.h" />
+    <ClInclude Include="Utils\PriorityQueue.h" />
+    <ClInclude Include="Utils\Texture.h" />
+    <ClInclude Include="Utils\Timer.h" />
+    <ClInclude Include="Utils\Utils.h" />
+    <ClInclude Include="Utils\WindowsClock.h" />
+    <ClInclude Include="World\Tile.h" />
+    <ClInclude Include="World\Wall.h" />
+    <ClInclude Include="World\World.h" />
+    <ClInclude Include="World\WorldFunctions.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="map_01.map" />
-    <None Include="Params.lua" />
+    <Media Include="Assets\391725__morganpurkis__battle-rifle.wav" />
+    <Media Include="Assets\Suspense-Militar-GGJ18.mp3" />
+  </ItemGroup>
+  <ItemGroup>
+    <Font Include="Assets\arial.ttf" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Assets\enemy-prot.png" />
+    <Image Include="Assets\enemy53x35.png" />
+    <Image Include="Assets\player1-prot.png" />
+    <Image Include="Assets\player32x23.png" />
+    <Image Include="Assets\player48x35.png" />
+    <Image Include="Assets\player64x46.png" />
+    <Image Include="Assets\sample-gameplay.png" />
+    <Image Include="Assets\spriteSheet16x16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Assets\map_01.map" />
+    <None Include="Assets\stage1.tmx" />
+    <None Include="Assets\stage2.tmx" />
+    <None Include="Assets\stage3.tmx" />
+    <None Include="Scripting\Params.lua" />
+    <None Include="Scripting\tiled-data.lua" />
+    <None Include="Scripting\tiled-importer.lua" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
