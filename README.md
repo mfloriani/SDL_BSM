@@ -1,6 +1,7 @@
 # SDL_BSM
 
-Game prototype developed as part of a gamedev postgraduation course in 2018.
+It is a minimalist top-down-shooter game prototype developed for a gamedev postgraduation course in 2018.
+The game 
 
 # Tech
 
@@ -15,38 +16,42 @@ Game prototype developed as part of a gamedev postgraduation course in 2018.
 
 # Level Design
 
-To design the levels I used a tool named Tiled. Using some components provided by the tool I defined the following objects:
+To design the levels I used a tool named Tiled that provided some tools that I used to define the following objects:
 
 * Walls
 * Player initial position
 * Enemies initial position
 * Enemies patrol route
 
-When the level was ready I exported .lua file that is loaded and parsed by the game to draw and set all game objects for the level.
+Then when the level was ready I exported .lua file to be loaded and parsed by the game.
 
-Level desing in Tiled with the components mentioned above
+Below a level design inside Tiled:
+
 [![Level Design](Assets/level-design.png)]
 
-Level loaded in the game (debug mode)
+Then the same level loaded in the game (in debug mode)
+
 [![Debug Mode](Assets/debug-mode.png)]
 
 In blue the walls used by the line of sight (LOS) system.
-In green the colliders.
-In purple the enemies patrol routes.
+In green the box colliders.
+In purple the enemy patrol route.
 In red the direction and field of view (FOV).
 
 # Pathfinding
 
-To move the enemies through the level I used the A* algorithm to navigate on a navgraph created whenever the level is loaded always considering the walls there defined.
+To move the enemies through the level I used the A* algorithm to navigate on a navgraph. 
+The navgraph is created based on level data loaded from the .lua file.
 
-In light blue the navgraph compose by the nodes and edges:
+Below a sample of the level with the navgraph highlighted in light blue:
+
 [![Navgraph](Assets/navgraph.png)]
 
 # Finite State Machine and Steering Behaviors
 
-I implemented a FSM for the enemies actions based on the following list:
+To define the enemies' actions I implemented an FSM with the following states:
 
-* Global (special state that is always executed)
+* Global (a special state that is always executed)
 * Idle
 * Patrol
 * Chase
@@ -54,7 +59,7 @@ I implemented a FSM for the enemies actions based on the following list:
 * Dying
 * Dead
 
-To move the enemies based on the action defined by the FSM I implemented some steering behaviors:
+Then to move the enemies based on the action set to the FSM I implemented some steering behaviors:
 
 * seek
 * arrive
@@ -63,4 +68,4 @@ To move the enemies based on the action defined by the FSM I implemented some st
 
 # Messaging
 
-All the gameobjects comunicate among them using a messaging system that I implemented.
+The gameo bjects communicate with each other using a messaging system.
