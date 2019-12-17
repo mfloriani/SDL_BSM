@@ -200,20 +200,22 @@ void Player::Draw()
 
 	if (world_->IsDebugOn())
 	{
-		SDL_SetRenderDrawColor(Game->GetRenderer(), 255, 0, 0, SDL_ALPHA_OPAQUE);
+		//draw the collider
+		SDL_SetRenderDrawColor(Game->GetRenderer(), 0, 255, 0, SDL_ALPHA_OPAQUE);		
 		SDL_RenderDrawRect(Game->GetRenderer(), &boxCollider_);
 		
+		//draw direction
+		SDL_SetRenderDrawColor(Game->GetRenderer(), 255, 0, 0, SDL_ALPHA_OPAQUE);
 		math::Vector2D pos = position_;
 		pos.x += spriteW_ / 2;
 		pos.y += spriteH_ / 2;
 		math::Vector2D dirOffset = pos + (direction_ * 50);
-
 		SDL_RenderDrawLine(Game->GetRenderer(), pos.x, pos.y, dirOffset.x, dirOffset.y);
 
+		//draw the FOV
 		math::Vector2D perp = math::perp(direction_);
 		math::Vector2D perpOffSet1 = pos + (perp * 100);
 		math::Vector2D perpOffSet2 = pos - (perp * 100);
-
 		SDL_RenderDrawLine(Game->GetRenderer(), perpOffSet2.x, perpOffSet2.y, perpOffSet1.x, perpOffSet1.y);
 
 		//math::Vector2D pos2 = position_;

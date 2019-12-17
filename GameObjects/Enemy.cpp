@@ -81,21 +81,26 @@ void Enemy::Draw()
 
 	if (world_->IsDebugOn())
 	{
+		//draw the patrol route
+		SDL_SetRenderDrawColor(Game->GetRenderer(), 204, 0, 204, SDL_ALPHA_OPAQUE);
 		pathfinder_->Draw(Game->GetRenderer());
 
+		//draw direction
+		SDL_SetRenderDrawColor(Game->GetRenderer(), 255, 0, 0, SDL_ALPHA_OPAQUE);
 		math::Vector2D pos = GetPosition();
 		pos.x += spriteW_ / 2;
 		pos.y += spriteH_ / 2;
 		math::Vector2D dirOffset = pos + (GetDirection() * 50);
-
 		SDL_RenderDrawLine(Game->GetRenderer(), pos.x, pos.y, dirOffset.x, dirOffset.y);
 
+		//draw FOV
 		math::Vector2D perp = math::perp(GetDirection());
 		math::Vector2D perpOffSet1 = pos + (perp * 100);
 		math::Vector2D perpOffSet2 = pos - (perp * 100);
-
 		SDL_RenderDrawLine(Game->GetRenderer(), perpOffSet2.x, perpOffSet2.y, perpOffSet1.x, perpOffSet1.y);
 
+		//draw collider
+		SDL_SetRenderDrawColor(Game->GetRenderer(), 0, 255, 0, SDL_ALPHA_OPAQUE);
 		SDL_RenderDrawRect(Game->GetRenderer(), &boxCollider_);
 	}
 	
