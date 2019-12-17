@@ -76,6 +76,7 @@ xcopy "$(ProjectDir)Scripting\*.lua" "$(OutDir)Scripting" /i /r /y</Command>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AI\FSM\EnemyStates.cpp" />
+    <ClCompile Include="AI\FSM\MenuStates.cpp" />
     <ClCompile Include="AI\Pathfinding\Pathfinder.cpp" />
     <ClCompile Include="AI\Steering\SteeringBehaviors.cpp" />
     <ClCompile Include="GameObjects\Bullet.cpp" />
@@ -83,6 +84,7 @@ xcopy "$(ProjectDir)Scripting\*.lua" "$(OutDir)Scripting" /i /r /y</Command>
     <ClCompile Include="GameObjects\GameObjectManager.cpp" />
     <ClCompile Include="GameObjects\Player.cpp" />
     <ClCompile Include="Game\Main.cpp" />
+    <ClCompile Include="Game\Menu.cpp" />
     <ClCompile Include="Game\SDLGame.cpp" />
     <ClCompile Include="Math\AffineTransform.cpp" />
     <ClCompile Include="Math\MathUtil.cpp" />
@@ -100,6 +102,7 @@ xcopy "$(ProjectDir)Scripting\*.lua" "$(OutDir)Scripting" /i /r /y</Command>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AI\FSM\EnemyStates.h" />
+    <ClInclude Include="AI\FSM\MenuStates.h" />
     <ClInclude Include="AI\FSM\State.h" />
     <ClInclude Include="AI\FSM\StateMachine.h" />
     <ClInclude Include="AI\Pathfinding\AStar.h" />
@@ -119,6 +122,7 @@ xcopy "$(ProjectDir)Scripting\*.lua" "$(OutDir)Scripting" /i /r /y</Command>
     <ClInclude Include="GameObjects\Pistol.h" />
     <ClInclude Include="GameObjects\Player.h" />
     <ClInclude Include="GameObjects\Weapon.h" />
+    <ClInclude Include="Game\Menu.h" />
     <ClInclude Include="Game\SDLGame.h" />
     <ClInclude Include="Math\AffineTransform.h" />
     <ClInclude Include="Math\Geometry.h" />

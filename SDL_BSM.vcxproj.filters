@@ -106,6 +106,12 @@
     <ClCompile Include="World\World.cpp">
       <Filter>World</Filter>
     </ClCompile>
+    <ClCompile Include="AI\FSM\MenuStates.cpp">
+      <Filter>AI\FSM</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Menu.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AI\FSM\EnemyStates.h">
@@ -239,6 +245,12 @@
     </ClInclude>
     <ClInclude Include="World\WorldFunctions.h">
       <Filter>World</Filter>
+    </ClInclude>
+    <ClInclude Include="AI\FSM\MenuStates.h">
+      <Filter>AI\FSM</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Menu.h">
+      <Filter>Game</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

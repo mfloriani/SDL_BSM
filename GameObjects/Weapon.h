@@ -1,3 +1,4 @@
+//TODO implement the weapon class
 //#pragma once
 //#include "WindowsClock.h"
 //#include "GameObject.h"
