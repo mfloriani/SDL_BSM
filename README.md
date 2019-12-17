@@ -1,7 +1,8 @@
 # SDL_BSM
 
 It is a minimalist top-down-shooter game prototype developed for a gamedev postgraduation course in 2018.
-The game 
+The main focus of the project was in the coding part.
+The game consists of eliminating all the enemies without been seen by them.
 
 # Tech
 
