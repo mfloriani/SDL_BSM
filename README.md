@@ -69,4 +69,4 @@ Then to move the enemies based on the action set to the FSM I implemented some s
 
 # Messaging
 
-The gameo bjects communicate with each other using a messaging system.
+The game objects communicate with each other using a messaging system.
