@@ -1,4 +1,4 @@
-# SDL_BSM
+# Top Down Shooter
 
 It is a minimalist top-down-shooter game prototype and the goal is to eliminate all the enemies without been seen by them.
 
