@@ -1,8 +1,6 @@
 # SDL_BSM
 
-It is a minimalist top-down-shooter game prototype developed for a gamedev postgraduation course in 2018.
-The main focus of the project was in the coding part.
-The game consists of eliminating all the enemies without been seen by them.
+It is a minimalist top-down-shooter game prototype and the goal is to eliminate all the enemies without been seen by them.
 
 # Tech
 
@@ -17,14 +15,14 @@ The game consists of eliminating all the enemies without been seen by them.
 
 # Level Design
 
-To design the levels I used a tool named Tiled that provided some tools that I used to define the following objects:
+To design the levels I used a tool named Tiled to define the following objects:
 
 * Walls
 * Player initial position
 * Enemies initial position
 * Enemies patrol route
 
-Then when the level was ready I exported .lua file to be loaded and parsed by the game.
+Then when the level was ready, I exported as a .lua file to be loaded and parsed by the game.
 
 Below a level design inside Tiled:
 
