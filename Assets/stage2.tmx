@@ -62,7 +62,7 @@
   </object>
  </objectgroup>
  <objectgroup name="Enemies">
-  <object id="6" x="90" y="115">
+  <object id="6" x="91" y="94">
    <properties>
     <property name="Route" type="int" value="12"/>
    </properties>

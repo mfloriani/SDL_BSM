@@ -21,5 +21,5 @@ inline bool HasOriginFOVonTarget(math::Vector2D originPos, math::Vector2D origin
 {
 	math::Vector2D toTarget = (targetPos - originPos).normalize();
 
-	return originDir.dot(toTarget) >= cos(fov / 2.0);
+	return originDir.dot(toTarget) >= cos(fov * 0.5);
 }
